@@ -22,7 +22,7 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'index/error',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -79,6 +79,9 @@ $config = [
     'modules' => [
         'utility' => [
             'class' => 'c006\utility\migration\Module',
+        ],
+        'user' => [
+            'class' => 'app\modules\user\Module',
         ],
         'admin' => [
             'class' => 'mdm\admin\Module',

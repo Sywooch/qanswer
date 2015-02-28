@@ -39,9 +39,21 @@ class IndexController extends BaseController
 			),
 		);
 	}
+    
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
+        ];
+    }
 
-
-	public function actionIndex() 
+    public function actionIndex() 
     {
 		$description = "乐问是一个专业的、开放的编程问答网站，编程爱好者可以在乐问自由的提问和回答与编程相关的问题，可以浏览、搜索乐问上所有的问题和答案。通过威望的提升，获取额外的权限来参与管理乐问网。";
 //		Yii::app()->clientScript->registerMetaTag($description,"description");
@@ -115,17 +127,5 @@ class IndexController extends BaseController
 			'questions' =>$questions,
 			'pages'		=>$pages,
 		));
-	}
-
-	/**
-	 * This is the action to handle external exceptions.
-	 */
-	public function actionError() {
-	    if($error=Yii::app()->errorHandler->error) {
-	    	if(Yii::app()->request->isAjaxRequest)
-	    		echo $error['message'];
-	    	else
-	        	$this->render('error', $error);
-	    }
 	}
 }

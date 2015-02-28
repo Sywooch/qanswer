@@ -252,6 +252,18 @@ div.breadcrumbs span
 .pl {
     padding-left: 10px;
 }
+
+
+/* xuesong write it 2011.03.16 */
+/*.container {width:960px;}*/
+#mainbar {
+    float: left;
+    margin-bottom: 40px;
+    width: 735px;
+}
+#mainbar-full {
+    width: 960px;
+}
 #sidebar {
     float: right;
     margin-bottom: 60px;
@@ -296,6 +308,11 @@ div.breadcrumbs span
 	width:auto;
 }
 
+#header #hmenus {
+	float:left;
+	padding:34px 0px 20px 5px;
+	width:705px;
+}
 #header #topbar #hlinks {
 	float:left;
 	margin:0px 35px 0px 0px;
@@ -316,6 +333,14 @@ div.breadcrumbs span
 }
 #hlinks a {
 	font-weight:bold;
+}
+#hlogo a {
+    background-position: 0 0;
+    display: block;
+    float: left;
+    height: 61px;
+    text-indent: -999999em;
+    width: 250px;
 }
 a {
 	color:#0077CC;
@@ -373,7 +398,28 @@ input {
 	margin:0px 2px;
 }
 
+#header #topbar #hsearch {
+	float:left;
+}
+#hsearch {
+	margin-right:-4px !important;
+}
+#hsearch .textbox {
+	color: #000;
+	margin: 0px;
+	width: 200px;
+	max-width: 200px;
+	border: none;
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+}
 /*nav*/
+#header #hlogo {
+	float:left;
+	height:61px;
+	margin-top:10px;
+	width:250px;
+}
 .askquestion {
 	float:right;
 }
@@ -396,7 +442,7 @@ table {
 	display:block;
 	font-weight:bold;
 }
-.envelope-on, .envelope-off, .vote-up-off, .vote-up-on, .vote-down-off, .vote-down-on, .star-on, .star-off, .comment-up-off, .comment-up-on, .flag-off, .flag-on, .edited-yes, a.cc-wiki-link, .feed-icon, .statsarrow, .vote-accepted-off, .vote-accepted-on, .vote-accepted-bounty, .badge-earned-check, .delete-tag, .delete-tag-hover, .grippie, .expander-arrow-hide, .expander-arrow-show, .expander-arrow-small-hide, .expander-arrow-small-show, .anonymous-gravatar, .badge1, .badge2, .badge3, .add-interesting-tag-on, .add-interesting-tag-off {
+#hlogo a, .envelope-on, .envelope-off, .vote-up-off, .vote-up-on, .vote-down-off, .vote-down-on, .star-on, .star-off, .comment-up-off, .comment-up-on, .flag-off, .flag-on, .edited-yes, a.cc-wiki-link, .feed-icon, .statsarrow, .vote-accepted-off, .vote-accepted-on, .vote-accepted-bounty, .badge-earned-check, .delete-tag, .delete-tag-hover, .grippie, .expander-arrow-hide, .expander-arrow-show, .expander-arrow-small-hide, .expander-arrow-small-show, .anonymous-gravatar, .badge1, .badge2, .badge3, .add-interesting-tag-on, .add-interesting-tag-off {
 	background-image:url(../images/sprites.png);
 	background-repeat:no-repeat;
 	overflow:hidden;
@@ -774,6 +820,37 @@ a.comment-user {
 	float:right;
 	font-weight:bold;
 }
+/*#tabs a {
+	background: inherit;
+	border: 1px solid #fff;
+	color: #777;
+	display: block;
+	float: left;
+	font-size: 90%;
+	height: 24px;
+	line-height: 22px;
+	margin: 8px 8px 0 0;
+	padding: 0 11px 0 11px;
+	text-decoration: none;
+}
+#tabs a:hover {
+	background: #fff;
+	border: 1px solid #777;
+	border-bottom-color: #fff;
+	line-height: 20px;
+	margin-top: 9px;
+}
+#tabs a.youarehere {
+	background: #fff;
+	border: 1px solid #777;
+	border-bottom-color: #ffffff;
+	color: black;
+	font-size: 120%;
+	height: 30px;
+	line-height: 28px;
+	margin-top: 3px;
+	padding: 0px 11px 0px 11px;
+}*/
 
 .answer {
 	border-bottom:1px solid #AAAAAA;
@@ -794,6 +871,7 @@ a.comment-user {
     line-height: 22px;
     margin: 0 0 8px;
     padding: 0;
+}
 }
 #question-header a {
 	color:#000000;
@@ -2267,6 +2345,13 @@ hr {
 	color:#888;
 	margin-top:5px;
 }
+#login-form {width:450px;float:left;border-right:1px dashed #999;}
+#third-login {
+	width:300px;float:left;
+	padding:20px;
+	padding-top:10px;
+}
+#third-login h3 {margin-bottom:10px;}
 .beian {width:200px;float:right;}
 .mt20 {margin-top: 20px;}
 .right {float:right;}
@@ -2313,3 +2398,4 @@ ul.setting-notify li label {margin-left:10px;}
 	margin-top: 6px; height: 24px; display: none;margin-right:10px;
 }
 .share {overflow:hidden;margin-top:10px;}
+ul.books li a {font-size:12px;font-weight:bold;}

@@ -1,17 +1,22 @@
 <?php
-$this->pageTitle='Error';
+
+use yii\helpers\Html;
+
+/* @var $this yii\web\View */
+/* @var $name string */
+/* @var $message string */
+/* @var $exception Exception */
+$this->title = $name;
 ?>
-
-<h2>Error <?php echo $code; ?></h2>
-
-<div class="error">
-<?php echo CHtml::encode($message); ?>
-</div>
-<div style="margin-top:20px;">
-	<p>返回到：</p>
-	<ul>
-		<li><?php echo CHtml::link('首页',$this->createUrl('index/index'));?></li>
-		<li><?php echo CHtml::link('最新问题',$this->createUrl('questions/index'));?></li>
-	</ul>
-
+<div class="site-error">
+    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="alert alert-danger">
+<?= nl2br(Html::encode($message)) ?>
+    </div>
+    <p>
+        The above error occurred while the Web server was processing your request.
+    </p>
+    <p>
+        Please contact us if you think this is a server error. Thank you.
+    </p>
 </div>
