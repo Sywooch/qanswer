@@ -39,14 +39,6 @@
         </tbody>
     </table>
     <?= yii\widgets\LinkPager::widget(['pagination' => $pages, 'options' => ['id' => 'activity-pager', 'class' => 'pagination']]); ?>
-    <?php
-//    $this->widget('MLinkPager', array(
-//        'pages' => $pages,
-//        'cssFile' => false,
-//        'htmlOptions' => array('class' => 'pages fr', 'id' => "activity-pager")
-//    ))
-    ?>
-
     <script type="text/javascript">
 		var activityFilter = 'all';
 		var activityPageSize = 30;

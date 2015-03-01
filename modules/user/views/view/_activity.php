@@ -38,8 +38,6 @@
     </table>
     <?= yii\widgets\LinkPager::widget(['pagination' => $pages, 'options' => ['id' => 'activity-pager', 'class' => 'pagination']]); ?>
     <script type="text/javascript">
-        var activityFilter = <?php echo yii\helpers\Html::encode($_GET['filter']); ?>;
-        var activityPageSize = <?php echo yii\helpers\Html::encode($_GET['pagesize']); ?>;
         $(function () {
             expandPostBody('.history-table td.async-load', '<td/><td/>');
         });

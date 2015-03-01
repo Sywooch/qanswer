@@ -36,7 +36,7 @@ class ViewController extends BaseController
         $tab = Yii::$app->request->get('tab','stats');
         switch ($tab) {
             case 'activity':
-                $url = array('users/activity', 'do' => 'show', 'page' => 1, 'pagsize' => Yii::$app->params['pages']['userActivityPagesize'], 'uid' => $id);
+                $url = array('/user/view/activity', 'do' => 'show', 'page' => 1, 'pagsize' => Yii::$app->params['pages']['userActivityPagesize'], 'uid' => $id);
                 $submenu = array(
                     'items' => array(
                         array('label' => '所有', 'url' => array_merge($url, array('filter' => 'all')), 'options' => array('class' => 'active', 'title' => '所有')),
@@ -57,8 +57,8 @@ class ViewController extends BaseController
                 $filter = Yii::$app->request->get('filter', 'all');
                 $pages = new Pagination(['totalCount' => $totalCount]);
                 $pages->pageSize = Yii::$app->params['pages']['userActivityPagesize'];
-                $pages->params = ['filter' => $filter, 'uid' => $id];
-                $pages->route = 'users/activity';
+                $pages->params = ['do'=>'show', 'filter' => $filter, 'uid' => $id];
+                $pages->route = 'user/view/activity';
 
                 $activities = $activityQuery->all();
                 $params = [
@@ -82,8 +82,8 @@ class ViewController extends BaseController
 
                 $pages = new Pagination(['totalCount' => $total]);
                 $pages->pageSize = Yii::$app->params['pages']['userReputationPagesize'];
-                $pages->params = ['sort' => 'time', 'uid' => $id];
-                $pages->route = 'users/rep';
+                $pages->params = ['do'=>'show', 'sort' => 'time', 'uid' => $id];
+                $pages->route = 'user/view/reputation';
 
                 $reputes = $reputeQuery->joinWith('question')->offset($pages->offset)->limit($pages->limit)->all();
                 $formattedReputes = Repute::formatReputes($reputes);
@@ -137,8 +137,8 @@ class ViewController extends BaseController
                 $pages = new Pagination(['totalCount' => $total]);
                 $pages->pageSize = 3;//Yii::$app->params['pages']['userFavoritePagesize'];
 
-                $pages->params = array('uid' => $id, 'sort' => $sort);
-                $pages->route = 'users/stats';
+                $pages->params = ['do' => 'favorites', 'uid' => $id, 'sort' => $sort];
+                $pages->route = 'user/view/stats';
                 $favs = $voteQuery->joinWith('question')->offset($pages->offset)->limit($pages->limit)->all();
                 
                 $params = [
@@ -276,10 +276,10 @@ class ViewController extends BaseController
                 
                 $total = $voteQuery->count();
                 $pages = new Pagination(['totalCount' => $total]);
-                $pages->pageSize = Yii::$app->params['pages']['userFavoritePagesize'];
+                $pages->pageSize = 3; //Yii::$app->params['pages']['userFavoritePagesize'];
                 $sort = Yii::$app->request->get('sort', 'added');
-                $pages->params = array('sort' => $sort, 'uid' => $uid);
-                $pages->route = 'users/activity';
+                $pages->params = ['do' => $do, 'sort' => $sort, 'uid' => $uid];
+                $pages->route = 'user/view/stats';
 
                 $favs = $voteQuery->joinWith('question')->offset($pages->offset)->limit($pages->limit)->all();
                 return $this->renderPartial('_stats-favs', array('submenu' => $submenu, 'favs' => $favs, 'pages' => $pages));
@@ -426,7 +426,7 @@ class ViewController extends BaseController
         return $this->renderPartial('_activity', array('activities' => $activities, 'pages' => $pages, 'submenu' => $submenu));
     }
 
-    public function actionRep()
+    public function actionReputation()
     {
         $id = Yii::$app->request->get('uid');
         $reputeQuery = Repute::find()->where(['{{%repute}}.uid' => $id])->orderBy(['time' => SORT_DESC]);
@@ -437,7 +437,7 @@ class ViewController extends BaseController
 
         $reputes = $reputeQuery->joinWith('question')->limit($pages->limit)->offset($pages->offset)->all();
         $formattedReputes = Repute::formatReputes($reputes);
-        return $this->renderPartial('_rep', [
+        return $this->renderPartial('_reputation', [
             'reputes' => $formattedReputes,
             'pages' => $pages
          ]);
