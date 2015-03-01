@@ -83,6 +83,9 @@ $config = [
         'user' => [
             'class' => 'app\modules\user\Module',
         ],
+        'question' => [
+            'class' => 'app\modules\question\Module',
+        ],
         'admin' => [
             'class' => 'mdm\admin\Module',
 //            'layout' => 'left-menu', // avaliable value 'left-menu', 'right-menu' and 'top-menu'

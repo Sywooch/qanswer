@@ -13,6 +13,58 @@ AppAsset::register($this);
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title><?php echo !empty($this->title) ? Html::encode($this->title)." - ".Yii::$app->name : Yii::$app->name; ?></title>
     <?php $this->head() ?>
+    <script type="text/javascript">
+	iAsk.init({
+		"site": {
+			"base"		: "<?php echo Yii::$app->request->baseUrl; ?>",
+			'baseUrl'	: '<?php echo Yii::$app->getUrlManager()->getBaseUrl();?>',
+		},
+		"user": {
+			"isRegistered": <?php if (Yii::$app->user->isGuest):?>false<?php else:?>true<?php endif;?>,
+			"fkey": "<?php echo Yii::$app->request->csrfToken;?>",
+			"messages": [
+			 <?php if (Yii::$app->user->identity):?>
+			 <?php foreach(Yii::$app->user->identity->notifies as $notify):?>
+			 {
+				"id": <?php echo $notify->id;?>,
+				"messageTypeId": <?php echo $notify->typeid;?>,
+				"text": '<?php echo $notify->formatMessage;?>',
+				"userId": "<?php echo $notify->uid;?>",
+				"showProfile": true
+			},
+			<?php endforeach;?>
+			<?php endif;?>
+			],
+			"inboxUnviewedCount": 0
+		},
+		"links": {
+			'protect'			: '<?php echo Url::to('/post/protect');?>',
+			'unprotect' 		: '<?php echo Url::to('/post/unprotect');?>',
+			'lock'				: '<?php echo Url::to('/post/lock');?>',
+			'unlock' 			: '<?php echo Url::to('/post/unlock');?>',
+			'popup'				: '<?php echo Url::to('/post/popup');?>',
+			'commenthelp'		: '<?php echo Url::to('/post/commenthelp');?>',
+			'login'		 		: '<?php echo Url::to('/users/login');?>',
+			'validateduplicate'	: '<?php echo Url::to('/post/validateduplicate');?>',
+			'messageInfoMod'	: '<?php echo Url::to('/messages/infomod');?>',
+			'filterTagIndex'	: '<?php echo Url::to('/filter/tagindex');?>',
+			'bountyStart'		: '<?php echo Url::to('/post/bountystart');?>',
+			'userActivity'		: '<?php echo Url::to(['users/activity']);?>',
+			'userRep'			: '<?php echo Url::to(['users/rep']);?>',
+			'userStat'			: '<?php echo Url::to(['users/stats']);?>',
+			'userView'			: '<?php echo Url::to('/users/view');?>',
+			'postView'			: '<?php echo Url::to('/post/view');?>',
+			'revisionsView'		: '<?php echo Url::to('/revisions/view');?>',
+			'profilelink'		: '<?php echo Url::to('/users/profilelink');?>',
+			'usersfilter'		: '<?php echo Url::to('/users/filter');?>',
+			'savepreference'	: '<?php echo Url::to('/users/savepreference');?>',
+			'subscriber'		: '<?php echo Url::to('/tags/subscriber');?>',
+			'vote'				: '<?php echo Url::to('/post/vote');?>',
+			'messageMark'		: '<?php echo Url::to('/messages/markread');?>',
+			'postComments'		: '<?php echo Url::to('/post/comments');?>'
+		},
+	});
+    </script>
 </head>
 
 <body>
@@ -21,17 +73,17 @@ AppAsset::register($this);
         <div id="header">
             <?php
                 NavBar::begin([
-                    'brandLabel' => 'My Company',
+                    'brandLabel' => 'QAnswer',
                     'brandUrl' => Yii::$app->homeUrl,
                     'options' => [
-                        'class' => 'navbar-inverse navbar-fixed-top',
+                        'class' => 'navbar-default navbar-fixed-top',
                     ],
                 ]);
                 echo Nav::widget([
                     'options' => ['class' => 'navbar-nav navbar-right'],
                     'items' => [
                         array('label'=>'首页', 'url'=>array('/index/index'),'active'=>Yii::$app->controller->id=='index'),
-                        array('label'=>'问题', 'url'=>array('/questions/index'),'active'=>Yii::$app->controller->id=='questions'),
+                        array('label'=>'问题', 'url'=>array('/question/questions/index'),'active'=>Yii::$app->controller->id=='questions'),
                         array('label'=>'标签', 'url'=>array('/tags/index'),'active'=>Yii::$app->controller->id=='tags'),
                         array('label'=>'用户', 'url'=>array('/users/index'),'active'=>Yii::$app->controller->id=='users'),
                         array('label'=>'徽章', 'url'=>array('/badges/index'),'active'=>Yii::$app->controller->id=='badges'),
@@ -72,7 +124,6 @@ AppAsset::register($this);
 			</div>
 			<span class="right"><?php // echo Yii::$app->params['version']['release'];?></span>
 		</div>
-
 	</div>
 <?php $this->endBody() ?>
 </body>

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\question\controllers;
 use app\components\BaseController;
 use app\models\Post;
 use app\models\PostState;
@@ -20,7 +20,7 @@ use Yii;
 class QuestionsController extends BaseController
 {
 
-    public $layout = 'column1';
+    public $layout = '//column1';
     public $hasOpenBounty = false;
     private $model;
 

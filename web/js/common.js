@@ -685,8 +685,7 @@ function expandPostBody(g, d, a, c) {
 	d = d === null ? "": d;
 	$(g).addClass("load-prepped").prepend('<a class="load-body expander-arrow-small-hide" style=""></a>&nbsp;').closest("tr").after('<tr class="loaded-body">' + d + '<td class="body-container" ' + (c > 0 ? 'colspan="' + c + '" ': "") + "/></tr>");
 	$('tr:has("td.body-container")').children().css("padding", "0px");
-	$(".load-body").die("click");
-//	$(".load-body").die("click").live("click",function() {
+	$(".load-body").off("click");
 	$(document).on("click", ".load-body", function() {
 		var $bodyContainer = $(this).closest("tr").next().show().find(".body-container:first");
 		var j;
