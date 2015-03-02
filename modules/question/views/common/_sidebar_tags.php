@@ -39,6 +39,7 @@ use yii\helpers\Html;
 		</table>
         <div class="dno">
             <input type="checkbox" title="hide ignored tags" id="hideIgnored"><label for="hideIgnored"> hide ignored tags</label>
+            <?= Html::a("保存链接", ['/user/user/savepreference'], ['class'=>'hidden', 'id' => 'user-save-preference']); ?>
         </div>
 	</div>
 	<script type="text/javascript">

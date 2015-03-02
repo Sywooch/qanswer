@@ -4,7 +4,7 @@
 return array(
 	'title'			=> '乐问',
 	'sitename'		=> '乐问',
-	'adminEmail'	=> 'xs8048@hotmail.com',
+	'adminEmail'	=> 'xue.song@outlook.com',
 	'copyrightInfo'	=>'Copyright &copy; 2009 by My Company.',
     'timeoffset'    => '8',
 	'site'			=> array(
@@ -101,23 +101,17 @@ return array(
 	),
 	'oauth'		=> array(
 		'douban'	=> array(
-			'key'	=> '8e1bb2ae4646bf59',
-			'secret'=> '0f57af45fd196ff82e070dd1f74c4fe8',
+			'key'	=> '123',
+			'secret'=> '123',
 		),
 
-		//域名：ilewen.com
 		'sina'		=> array(
-			'key'	=> '272806630',
-			'secret'=> '0921d3742f30d2d06157af75c3c17f19',
+			'key'	=> '123',
+			'secret'=> '123',
 		),
-//		'sina'		=> array(
-//			'key'	=> '3592330581',
-//			'secret'=> '193a981d3d40e08a1da9f01ad4cf25a8',
-//		),
 		'qq'		=> array(
-			'key'	=> '215234',
-			'secret'=> '162beb4e7a33948a3f641bb6cd628ea8',
+			'key'	=> '123',
+			'secret'=> '123',
 		)
 	),
-//	'version'		=> require(dirname(__FILE__).'/version.php'),
 );

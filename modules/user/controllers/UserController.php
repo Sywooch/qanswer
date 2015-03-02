@@ -4,6 +4,7 @@ namespace app\modules\user\controllers;
 
 use Yii;
 use app\components\BaseController;
+use app\components\Formatter;
 use app\modules\user\models\LoginForm;
 use app\modules\user\models\RegisterForm;
 
@@ -123,4 +124,27 @@ class UserController extends BaseController
         Yii::$app->user->logout();
         $this->redirect(Yii::$app->homeUrl);
     }    
+    
+    public function actionSavepreference()
+    {
+        $key = intval(Yii::$app->request->post('key'));
+        $uid = Yii::$app->user->id;
+        $userProfile = \app\modules\user\models\UserProfile::findOne($uid);
+
+        if ($userProfile) {
+            if ($key == 20) {
+                $value = Yii::$app->request->post('value');
+                $preference = Formatter::filterTags($value);
+                $userProfile->preference = implode(" ", $preference);
+                $userProfile->update(false, ['preference']);
+                echo $userProfile->preference;
+            } elseif ($key == 25) {
+                $value = Yii::$app->request->post('value');
+                $unpreference = Formatter::filterTags($value);
+                $userProfile->unpreference = implode(" ", $unpreference);
+                $userProfile->update(false, ['preference']);
+            }
+        }
+    }
+
 }

@@ -888,20 +888,19 @@ iAsk.tags = (function() {
 		}
 		return l
 	};
-	function submitTag(cmdNum, tagname, k) {
-		var n = "";
+	function submitTag(cmdNum, tagname) {
+		var userId = "";
 		if (typeof forUserId != "undefined") {
-			n = forUserId
+			userId = forUserId
 		}
-		$.post(iAsk.options.links.savepreference, {
+		$.post($("#user-save-preference").attr('href'), {
 			fkey: iAsk.options.user.fkey,
 			key: cmdNum,
 			value: tagname,
-			forUserId: n
-		},
-		k)
+			forUserId: userId
+		});
 	}
-	var bindTagClick = function(inputTag, divTag, count, posttag, inFocus, k) {
+	var bindTagClick = function(inputTag, divTag, count, posttag, inFocus, isSubmit) {
 		var tags = $(inputTag).val();
 		var tagList = sanitizeAndSplitTags(tags, true);
 		var isExist = false;
@@ -926,10 +925,10 @@ iAsk.tags = (function() {
 		if (inFocus) {
 			$(inputTag).focus()
 		}
-		if (!k) {
+		if (!isSubmit) {
 			submitTag(count, $(divTag).text())
 		}
-		a()
+		applyPrefs();
 	};
 	var processTags = function(num) {
 		var spanTag = "<span class=\"delete-tag\" onmouseover=\"$(this).attr('class', 'delete-tag-hover')\" onmouseout=\"$(this).attr('class', 'delete-tag')\" title=\"删除\"></span>";
@@ -943,7 +942,7 @@ iAsk.tags = (function() {
 			$(this).prev().remove();
 			$(this).remove();
 			submitTag(25, $("#ignoredTags").text());
-			a()
+			applyPrefs()
 		});
 		if (num == 0) {
 			$("#interestingTags > .post-tag").after(spanTag)
@@ -955,10 +954,10 @@ iAsk.tags = (function() {
 			$(this).prev().remove();
 			$(this).remove();
 			submitTag(20, $("#interestingTags").text());
-			a();
+			applyPrefs();
 		})
 	};
-	var a = function(r, k) {
+	var applyPrefs = function(r, k) {
 		var aIgnoredTags = $("#ignoredTags > a");
 		var aInterestingTags = $("#interestingTags > a");
 		var aInferredTags = $("#inferredTags > a");
@@ -988,31 +987,31 @@ iAsk.tags = (function() {
 			}
 		}
 		if (o.length > 0) {
-			var n = $("#hideIgnored").is(":checked") ? "tagged-ignored-hidden": "tagged-ignored";
-			$(o).closest("div.question-summary").addClass(n)
+			var taggedIgnored = $("#hideIgnored").is(":checked") ? "tagged-ignored-hidden": "tagged-ignored";
+			$(o).closest("div.question-summary").addClass(taggedIgnored);
 		}
 		if (q.length > 0) {
-			$(q).closest("div.question-summary").addClass("tagged-interesting")
+			$(q).closest("div.question-summary").addClass("tagged-interesting");
 		}
 		if (p.length > 0) {
-			$(p).closest("div.question-summary").addClass("tagged-interesting")
+			$(p).closest("div.question-summary").addClass("tagged-interesting");
 		}
 	};
 	var d = function(l, o) {
-		var k = $("#tag-menu");
+		var $tagMenu = $("#tag-menu");
 		if ($("#interestingTags").length > 0) {
 			if (o) {
-				var n = $("#interestingTags a").filter(function() {
-					return $(this).text() == l
+				var $interestingTags = $("#interestingTags a").filter(function() {
+					return $(this).text() == l;
 				});
-				n.add(n.next()).remove();
-				a()
+				$interestingTags.add($interestingTags.next()).remove();
+				applyPrefs();
 			} else {
 				$("#interestingTag").val(l);
-				bindTagClick("#interestingTag", "#interestingTags", 20, "post-tag", false, true)
+				bindTagClick("#interestingTag", "#interestingTags", 20, "post-tag", false, true);
 			}
 		}
-		iAsk.helpers.addSpinner(k);
+		iAsk.helpers.addSpinner($tagMenu);
 		$.ajax({
 			type: "POST",
 			url: "/tags/" + encodeURIComponent(l) + "/favorite",
@@ -1029,8 +1028,7 @@ iAsk.tags = (function() {
 		})
 	};
 	var j = function(l, n) {
-		var k = $("#tag-menu");
-		iAsk.helpers.addSpinner(k);
+		iAsk.helpers.addSpinner($("#tag-menu"));
 		$.ajax({
 			type: "POST",
 			url: "/tags/" + encodeURIComponent(l) + "/subscription",
@@ -1040,11 +1038,11 @@ iAsk.tags = (function() {
 			},
 			dataType: "html",
 			success: function(o) {
-				c(k.html($("" + o)), l)
+				c($("#tag-menu").html($("" + o)), l)
 			},
 			error: function(p, q, o) {},
 			complete: iAsk.helpers.removeSpinner
-		})
+		});
 	};
 	var c = function(k, l) {
 		k.find(".tm-se-subscription").click(function() {
@@ -1063,7 +1061,6 @@ iAsk.tags = (function() {
 		}
 		var n;
 		var k = false;
-//		$(".post-tag").live("mouseenter", function() {
 		$("document").on("mouseenter", ".post-tag", function() {
 			if ($(this).attr("href").charAt(0) != "/") {
 				return false
@@ -1099,9 +1096,8 @@ iAsk.tags = (function() {
 				});
 				q.show();
 			},500);
-			return false
+			return false;
 		});
-//		$(".post-tag").live("mouseleave",function() {
 		$(document).on("mouseleave",".post-tag",function() {
 			clearTimeout(n);
 			setTimeout(function() {
@@ -1113,7 +1109,7 @@ iAsk.tags = (function() {
 		});
 	};
 	return {
-		applyPrefs: a,
+		applyPrefs: applyPrefs,
 		init: function() {
 			g();
 			if ($("#interestingTags").length == 0) {
@@ -1128,7 +1124,7 @@ iAsk.tags = (function() {
 			});
 			$("#hideIgnored").click(function() {
 				submitTag(30, $(this).is(":checked"));
-				a()
+				applyPrefs();
 			});
 			bindTagFilterAutoComplete("#ignoredTag");
 			bindTagFilterAutoComplete("#interestingTag");

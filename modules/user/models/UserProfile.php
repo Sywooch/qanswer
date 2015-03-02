@@ -19,6 +19,7 @@ use Yii;
  */
 class UserProfile extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
@@ -60,22 +61,26 @@ class UserProfile extends \yii\db\ActiveRecord
             'unpreference' => Yii::t('app', 'Unpreference'),
         ];
     }
-    
-    public function beforeSave() 
-    {
-		parent::beforeSave();
-		$this->preference = (is_array($this->preference)) ? implode(' ',$this->preference) : $this->preference;
-		$this->unpreference = (is_array($this->unpreference)) ? implode(' ',$this->unpreference) : $this->unpreference;
-		return true;
-	}
 
-	public function afterFind()
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
     {
-		parent::afterFind();
-		$this->preference = empty($this->preference) ? array() : array_map('trim',explode(' ',$this->preference));
-		$this->unpreference = empty($this->unpreference) ? array() : array_map('trim',explode(' ',$this->unpreference));
-		if ($this->birthday == '0000-00-00') {
-			$this->birthday = '';
-		}
-	}    
+        parent::beforeSave($insert);
+        $this->preference = (is_array($this->preference)) ? implode(' ', $this->preference) : $this->preference;
+        $this->unpreference = (is_array($this->unpreference)) ? implode(' ', $this->unpreference) : $this->unpreference;
+        return true;
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+        $this->preference = empty($this->preference) ? array() : array_map('trim', explode(' ', $this->preference));
+        $this->unpreference = empty($this->unpreference) ? array() : array_map('trim', explode(' ', $this->unpreference));
+        if ($this->birthday == '0000-00-00') {
+            $this->birthday = '';
+        }
+    }
+
 }

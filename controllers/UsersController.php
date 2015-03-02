@@ -4,8 +4,6 @@ namespace app\Controllers;
 
 use app\components\BaseController;
 use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\HttpException;
 use app\models\User;
 use app\models\UserProfile;

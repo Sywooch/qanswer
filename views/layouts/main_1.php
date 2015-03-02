@@ -57,7 +57,6 @@ AppAsset::register($this);
 			'revisionsView'		: '<?php echo Url::to('/revisions/view');?>',
 			'profilelink'		: '<?php echo Url::to('/users/profilelink');?>',
 			'usersfilter'		: '<?php echo Url::to('/users/filter');?>',
-			'savepreference'	: '<?php echo Url::to('/users/savepreference');?>',
 			'subscriber'		: '<?php echo Url::to('/tags/subscriber');?>',
 			'vote'				: '<?php echo Url::to('/post/vote');?>',
 			'messageMark'		: '<?php echo Url::to('/messages/markread');?>',
@@ -84,7 +83,7 @@ AppAsset::register($this);
                     'items' => [
                         array('label'=>'首页', 'url'=>array('/index/index'),'active'=>Yii::$app->controller->id=='index'),
                         array('label'=>'问题', 'url'=>array('/question/questions/index'),'active'=>Yii::$app->controller->id=='questions'),
-                        array('label'=>'标签', 'url'=>array('/tags/index'),'active'=>Yii::$app->controller->id=='tags'),
+                        array('label'=>'标签', 'url'=>array('/question/tags/index'),'active'=>Yii::$app->controller->id=='tags'),
                         array('label'=>'用户', 'url'=>array('/users/index'),'active'=>Yii::$app->controller->id=='users'),
                         array('label'=>'徽章', 'url'=>array('/badges/index'),'active'=>Yii::$app->controller->id=='badges'),
                         array('label'=>'等待回答', 'url'=>array('unanswered/index'),'active'=>Yii::$app->controller->id=='unanswered'),

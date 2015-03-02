@@ -196,8 +196,8 @@ class QuestionsController extends BaseController
         ];
 
         $query = Post::find()->where('idtype=:idtype', [':idtype' => Post::IDTYPE_Q]);
-        $_GET['sort'] = isset($_GET['sort']) ? $_GET['sort'] : '';
-        switch ($_GET['sort']) {
+        $sort = Yii::$app->request->get('sort', 'newest');
+        switch ($sort) {
             case 'votes':
                 $this->title = "高投票问题";
                 $query->orderBy(['score' => SORT_DESC]);
@@ -221,7 +221,7 @@ class QuestionsController extends BaseController
             case 'newest':
             default:
                 $this->title = "最新问题";
-                $submenu['items'][0]['itemOptions']['class'] = 'youarehere';
+                $submenu['items'][0]['options']['class'] = 'active';
                 $query->orderBy(['createtime' => SORT_DESC]);
                 break;
         }
@@ -234,9 +234,10 @@ class QuestionsController extends BaseController
         $questions = $query->all();
 
         return $this->render('index', [
-                    'questions' => $questions,
-                    'pages' => $pages,
-                    'submenu' => $submenu,
+            'questions' => $questions,
+            'pages' => $pages,
+            'submenu' => $submenu,
+            'sort' => $sort
         ]);
     }
 
@@ -260,9 +261,8 @@ class QuestionsController extends BaseController
         $questionTagQuery = QuestionTag::find()->where(['tag' => $tag->name]);
 
         $this->title = "'" . $tag->name . "'";
-        $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
+        $sort = Yii::$app->request->get('sort', 'newest');
         switch ($sort) {
-
             case 'bounty':
                 $this->title .= " 正在悬赏的问题";
                 $questionTagQuery->joinWith([
@@ -323,6 +323,7 @@ class QuestionsController extends BaseController
             'tag' => $tag,
             'submenu' => $submenu,
             'pages' => $pages,
+            'sort' => $sort
         ]);
     }
 

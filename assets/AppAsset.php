@@ -34,6 +34,7 @@ class AppAsset extends AssetBundle
         'js/common.js',
         'js/jquery.wmd.js',
         'js/autosave.js',
+        'js/tageditor.js',
         'js/user-page.js'
     ];
     public $depends = [

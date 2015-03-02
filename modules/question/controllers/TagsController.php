@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\question\controllers;
 use app\components\BaseController;
 use Yii;
 use app\models\Tag;
@@ -14,40 +14,8 @@ use app\components\String;
 class TagsController extends BaseController
 {
 
-    public $layout = 'column1';
+    public $layout = '//column1';
     private $_model;
-
-    /**
-     * @return array action filters
-     */
-    public function filters()
-    {
-        return array(
-            'accessControl', // perform access control for CRUD operations
-        );
-    }
-
-    /**
-     * 设置接入控制规则
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules()
-    {
-        return array(
-            array('allow', // allow all users to access 'index' and 'view' actions.
-                'actions' => array('index', 'view', 'subscriber'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated users to access all actions
-                'actions' => array('edit'),
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
-    }
 
     /**
      * 显示单个问题

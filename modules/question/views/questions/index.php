@@ -2,9 +2,7 @@
     <div id="mainbar" class="col-md-9">
         <div class="subheader">
             <h1 id="h-all-questions">问题列表</h1>
-            <?php
-            echo \yii\widgets\Menu::widget($submenu);
-            ?>
+            <?= \yii\widgets\Menu::widget($submenu); ?>
         </div>
         <div id="questions">
             <?php
@@ -16,7 +14,6 @@
             }
             ?>
         </div>
-        <div class="cbt"></div>
         <?= 
             yii\widgets\LinkPager::widget([
                 'pagination' => $pages,
@@ -28,7 +25,7 @@
             <div class="summarycount al"><?php echo $pages->totalCount;?></div>
             <p>问题</p>
         </div>
-        <?php $this->render('/common/_sidebar_tags');?>
+        <?= $this->render('/common/_sidebar_tags');?>
         <?php // $this->widget('RepTops'); ?>
     </div>
 </div>
