@@ -16,8 +16,8 @@ AppAsset::register($this);
     <script type="text/javascript">
 	iAsk.init({
 		"site": {
-			"base"		: "<?php echo Yii::$app->request->baseUrl; ?>",
-			'baseUrl'	: '<?php echo Yii::$app->getUrlManager()->getBaseUrl();?>',
+			"base"		: "<?php echo Yii::$app->homeUrl; ?>",
+			'baseUrl'	: '<?php echo Yii::$app->homeUrl;?>',
 		},
 		"user": {
 			"isRegistered": <?php if (Yii::$app->user->isGuest):?>false<?php else:?>true<?php endif;?>,

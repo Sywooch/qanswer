@@ -40,27 +40,12 @@ class FilterController extends BaseController
 
     public function actionTags()
     {
-        $s = '';
-        $tags = Tag::Model()->suggestTags($_GET['q']);
+        $results = [];
+        $tags = Tag::suggestTags(\Yii::$app->request->get('term'));
         foreach ($tags as $tag) {
-            $s .= "{$tag['name']}|{$tag['frequency']}\n";
+            $results[] = ['value' => $tag['name'], 'frequency' => $tag['frequency']];
         }
-        echo $_GET['callback'] . "(" . CJSON::encode($s) . ")";
-    }
-
-    public function actionDiff()
-    {
-        $a = array(
-            "eee",
-            "bbb",
-            "ccc"
-        );
-        $b = array(
-            "eeee",
-            "bbb",
-            "cc",
-        );
-        echo TextDiff::compare($a, $b);
+        echo \yii\helpers\Json::encode($results);
     }
 
     public function actionTagindex()

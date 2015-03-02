@@ -41,5 +41,6 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'yii\web\JqueryAsset',
+        'yii\jui\JuiAsset',
     ];
 }

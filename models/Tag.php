@@ -7,13 +7,6 @@ use yii\db\ActiveRecord;
 class Tag extends ActiveRecord
 {
     /**
-     * The followings are the available columns in table 'tbl_tag':
-     * @var integer $id
-     * @var string $name
-     * @var integer $frequency
-     */
-
-    /**
      * @return string the associated database table name
      */
     public static function tableName()
@@ -32,18 +25,6 @@ class Tag extends ActiveRecord
             array('name', 'required'),
             array('frequency', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 128),
-        );
-    }
-
-    /**
-     * @return array relational rules.
-     */
-    public function relations()
-    {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-            'post' => array(self::BELONGS_TO, 'Post', 'postid'),
         );
     }
 
@@ -78,13 +59,15 @@ class Tag extends ActiveRecord
         ));
 
         $total = 0;
-        foreach ($models as $model)
-            $total+=$model->frequency;
-
+        foreach ($models as $model) {
+            $total += $model->frequency;
+        }
+        
         $tags = array();
         if ($total > 0) {
-            foreach ($models as $model)
+            foreach ($models as $model) {
                 $tags[$model->name] = 8 + (int) (16 * $model->frequency / ($total + 10));
+            }
             ksort($tags);
         }
         return $tags;
@@ -101,35 +84,12 @@ class Tag extends ActiveRecord
 
     public function getTagsCount($t)
     {
-//		$tags =$this->findAllByAttributes(array('name'=>$t));
-//		return $tags;
         return $this->findAll(['name' => $t]);
     }
 
-    public function suggestTags($keyword, $limit = 20)
+    public static function suggestTags($keyword, $limit = 20)
     {
-        $tags = $this->findAll(array(
-            'condition' => 'name LIKE :keyword',
-            'order' => 'frequency DESC, Name',
-            'limit' => $limit,
-            'params' => array(
-                ':keyword' => '%' . strtr($keyword, array('%' => '\%', '_' => '\_', '\\' => '\\\\')) . '%',
-            ),
-        ));
-        return $tags;
-
-//		$tags=$this->findAll(array(
-//			'condition'=>'name LIKE :keyword',
-//			'order'=>'frequency DESC, Name',
-//			'limit'=>$limit,
-//			'params'=>array(
-//				':keyword'=>'%'.strtr($keyword,array('%'=>'\%', '_'=>'\_', '\\'=>'\\\\')).'%',
-//			),
-//		));
-//		$names=array();
-//		foreach($tags as $tag)
-//			$names[]=$tag->name;
-//		return $names;
+        return $tags = self::find()->where(['like','name',$keyword])->limit($limit)->orderBy(['frequency' => SORT_DESC])->all();
     }
 
     public function updateTags($oldTags, $newTags, $uid)
@@ -140,9 +100,6 @@ class Tag extends ActiveRecord
 
     public function addTags($tags, $uid)
     {
-//        $criteria = new CDbCriteria;
-//        $criteria->addInCondition('name', $tags);
-//        $this->updateCounters(array('frequency' => 1), $criteria);
         self::updateAllCounters(['frequency' => 1], ['name' => $tags]);
         foreach ($tags as $name) {
             if (!self::find()->where('name=:name', [':name'=>$name])->exists()) {

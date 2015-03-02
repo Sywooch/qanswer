@@ -31,7 +31,7 @@ iAsk.init = (function() {
 				iAsk.notify.showFirstTime(initParam.site.description)
 			}
 			iAsk.tags.init();
-		})
+		});
 	}
 })();
 function appendLoader(a){
