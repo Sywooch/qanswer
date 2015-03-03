@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Controllers;
+namespace app\modules\question\controllers;
 use app\components\BaseController;
 use app\models\Revision;
 use app\models\Post;
@@ -21,7 +21,7 @@ use Yii;
 class PostController extends BaseController
 {
 
-    public $layout = 'column2';
+    public $layout = '//column2';
     private $voteTypeIds = array(
         "informModerator" => -1,
         "undoMod" => 0,

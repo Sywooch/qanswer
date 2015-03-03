@@ -5,17 +5,17 @@ use yii\web\AssetBundle;
 
 class EditorAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = "@bower/editor.md";
     public $jsOptions = [
         'position' => \yii\web\View::POS_HEAD
     ];    
     public $css = [
-        '/css/wmd.css',
+        'dist/css/editormd.css',
     ];
     public $js = [
-        'js/jquery.wmd.js',
+        'dist/js/editormd.js',
     ];
     public $depends = [
+        'yii\web\JqueryAsset',
     ];
 }

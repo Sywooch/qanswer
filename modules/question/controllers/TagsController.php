@@ -26,7 +26,7 @@ class TagsController extends BaseController
 
         $tag = Tag::findOne(['name' => $tagName]);
 
-        $op = isset($_GET['op']) ? $_GET['op'] : '';
+        $op = Yii::$app->request->get('op', 'info');
         $submenu = array(
             'items' => array(
                 array('label' => '基本信息', 'url' => ['tags/view', 'tag' => $tag->name, 'op' => 'info'], 'options' => ['title' => '基本信息']),
@@ -71,7 +71,7 @@ class TagsController extends BaseController
                                          ->innerJoin('questiontag qt', 'qt.postid = question.id')
                                          ->orderBy(['question.viewcount' => SORT_DESC]);
 
-                $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+                $filter = Yii::$app->request->get('filter', '');
                 
                 $postQuery->where(['qt.tag' => $tag->name])->limit(30);
                 
@@ -92,7 +92,7 @@ class TagsController extends BaseController
                         break;
                     case 'all':
                     default:
-                        $subtabs['items'][4]['options']['class'] = 'youarehere';
+                        $subtabs['items'][4]['options']['class'] = 'active';
                         break;
                 }
                 $postQuery->andWhere('question.createtime>:time',[':time' => $time]);
@@ -119,7 +119,7 @@ class TagsController extends BaseController
             case 'info':
             default:
                 $this->pageDescription = $tag->post->excerpt;
-                $submenu['items'][0]['itemOptions']['class'] = 'youarehere';
+                $submenu['items'][0]['options']['class'] = 'active';
                 return $this->render('view', [
                     'tag' => $tag,
                     'submenu' => $submenu

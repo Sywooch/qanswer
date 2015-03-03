@@ -1,13 +1,13 @@
 <?php
 use app\components\Formatter;
 ?>
-<div id="answer-id-5423187" class="answer-summary question-summary row">
-	<div class="statscontainer col-md-1">
+<div id="answer-id-5423187" class="answer-summary question-summary">
+	<div class="statscontainer">
 		<div class="vote-info">
             <div onclick="window.location.href='<?= Yii::$app->urlManager->createUrl('questions/view',array('id'=>$data->idv,'#'=>$data->id));?>'" title="该回答所获得投票" class="answer-votes<?php if ($data->accepted==1) echo ' answered-accepted';?> default"><?php echo $data->score;?></div>
 		</div>
 	</div>
-	<div class="summary col-md-11">
+	<div class="summary pull-left">
 		<div class="answer-link">
 			<?php echo \yii\helpers\Html::a(\yii\helpers\Html::encode($data->question->title), array('questions/view','id'=>$data->question->id,"#"=>$data->id),array('class'=>'answer-hyperlink'));?>
 		</div>

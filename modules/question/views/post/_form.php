@@ -1,6 +1,3 @@
-<?php // Yii::$app->clientScript->registerCssFile(Yii::app()->baseUrl.'/css/wmd.css');?>
-<?php // Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/jquery.wmd.js');?>
-<?php // Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/js/autosave.js');?>
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
@@ -8,12 +5,6 @@ use yii\helpers\Url;
 ?>
 <script type="text/javascript">
 $(function() {
-    $("#wmd-input").wmd({
-        "preview": true,
-        "helpLink": "http://daringfireball.net/projects/markdown/",
-        "helpHoverTitle": "Markdown Help",
-    });
-    $("#wmd-input").TextAreaResizer();
     bindTagFilterAutoComplete('#Post_tags');
     <?php if (isset($type) && $type=='ask'):?>
     iAsk.editor.init("<?php echo yii\helpers\Url::to('post/heartbeat');?>",'ask');
@@ -24,7 +15,6 @@ $(function() {
 	});
 });
 </script>
-<div class="form">
 	<?php
 	$form = ActiveForm::begin([
 		'id'=>'ask-form',
@@ -57,5 +47,3 @@ $(function() {
     <?php echo Html::submitButton($model->isNewRecord ? '提交' : '保存', ['class'=>'btn btn-default']); ?>
 
 <?php ActiveForm::end(); ?>
-
-</div>

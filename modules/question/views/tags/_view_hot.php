@@ -11,9 +11,8 @@ $this->registerMetaTag(['name' => 'description', 'content' => $tag->name], 'desc
 <div class="row">
     <div id="questions" class="col-md-9">
         <div class="content-inside">
-            <h2 class="fl">热门答案&nbsp;<?php echo \yii\helpers\Html::a($tag->name, array('questions/tagged','tag'=>$tag->name),array('rel'=>'tag','class'=>'post-tag','title'=>"该标签热门答案"));?></h2>
+            <h2 class="pull-left">热门答案&nbsp;<?php echo \yii\helpers\Html::a($tag->name, array('questions/tagged','tag'=>$tag->name),array('rel'=>'tag','class'=>'post-tag','title'=>"该标签热门答案"));?></h2>
             <?= \yii\widgets\Menu::widget($subtabs);?>
-            <div style="clear: both;"></div>
             <div class="question-mini-list">
                 <?php
                 foreach ($answers as $item) {

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\Formatter;
 
+\app\assets\EditorAsset::register($this);
 $this->title = $model->title;
 ?>
 <script type="text/javascript">
@@ -140,17 +141,16 @@ $(function(){
                         ?>
                     </div>
                 <?php endif; ?>
-                <?php // Yii::$app->clientScript->registerCssFile(Yii::$app->baseUrl.'/css/wmd.css');?>
-        <?php // Yii::$app->clientScript->registerScriptFile(Yii::$app->baseUrl.'/js/jquery.wmd.js'); ?>
-        <?php // Yii::$app->clientScript->registerScriptFile(Yii::$app->baseUrl.'/js/autosave.js'); ?>
+                <script type="text/javascript">
+                    $(function() {
+                        editormd("editor-textarea", {
+                            path : '<?= Yii::$app->assetManager->getPublishedUrl("@bower/editor.md"); ?>/lib/', // codemirror、marked等依赖的库的路径
+                            height: 300
+                        });
+                    });
+                </script>
                 <script type="text/javascript">
                     $(function () {
-                        $("#wmd-input").wmd({
-                            "preview": true,
-                            "helpLink": "http://daringfireball.net/projects/markdown/",
-                            "helpHoverTitle": "Markdown Help",
-                        });
-                        $("#wmd-input").TextAreaResizer();
                         iAsk.editor.init("<?php echo yii\helpers\Url::to('post/heartbeat'); ?>", 'answer');
                         iAsk.navPrevention.init($('#wmd-input'));
                     });

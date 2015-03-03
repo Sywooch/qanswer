@@ -16,9 +16,6 @@ $this->registerMetaTag(['name' => 'description', 'content' => $tag->post->excerp
             <div class="content-inside">
                 <h2>关于 <?php echo Html::a($tag->name, array('questions/tagged','tag'=>$tag->name),array('rel'=>'tag','class'=>'post-tag','title'=>"该标签相关问题"));?></h2>
                 <div class="post-text">
-
-                    <div class="welovestackoverflow">
-                    </div>
                     <?php echo isset($tag->post) ? $tag->post->content : "";?>
                 </div>
 

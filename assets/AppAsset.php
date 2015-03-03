@@ -25,14 +25,12 @@ class AppAsset extends AssetBundle
         'css/jquery.autocomplete.css',
         'css/prettify.css',
         'css/site.css',
-        '/css/wmd.css',
     ];
     public $js = [
         'js/prettify.js',
         'js/tageditor.js',
         'js/jquery.typewatch.js',
         'js/common.js',
-        'js/jquery.wmd.js',
         'js/autosave.js',
         'js/tageditor.js',
         'js/user-page.js'

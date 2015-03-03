@@ -50,7 +50,6 @@ body {
     color: #000000;
     font-family: Arial,Helvetica,sans-serif;
     font-size: 80%;
-    text-align: center;
     line-height: 1;
 }
 
@@ -83,14 +82,6 @@ ol {
 	list-style: decimal;
 	margin-left: 30px;
 	margin-bottom: 1em;
-}
-.container {
-    text-align: left;
-}
-textarea {
-    border: 1px solid #999999;
-    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
-    font-size: 90%;
 }
 .ar {
 	text-align: right !important;
@@ -162,20 +153,6 @@ div.view
 	border: 1px solid #C9E0ED;
 }
 
-div.breadcrumbs
-{
-	font-size: 0.9em;
-	padding: 5px 20px;
-}
-
-div.breadcrumbs span
-{
-	font-weight: bold;
-}
-
-#post-editor {
-    width: 660px;
-}
 .community-option {
 	float: right;
 	color: #888;
@@ -231,9 +208,6 @@ div.breadcrumbs span
 }
 .pl {
     padding-left: 10px;
-}
-#sidebar {
-    margin-bottom: 60px;
 }
 #header {
 	height:120px;
@@ -301,15 +275,6 @@ a {
 }
 a:hover {
 	text-decoration:underline;
-}
-input, select, button {
-	border:1px solid #999999;
-	font-family:Arial,Helvetica,sans-serif;
-	font-size:100%;
-}
-input {
-	margin: 5px 0;
-	padding: 3px;
 }
 .user-list {
 	margin-right: 10px;
@@ -769,19 +734,6 @@ a.comment-user {
 .question-hyperlink {
 	font-weight:bold;
 }
-.answer-votes {
-	color: #555;
-	text-align: center;
-	background-color: #eeeeee;
-	float: left;
-	font-weight: bold;
-	padding: 4px;
-	padding-bottom: 5px;
-	width: 20px;
-	height: 15px;
-	text-decoration: none;
-	font-size: 110%;
-}
 
 .statscontainer {
     float: left;
@@ -911,9 +863,6 @@ a.comment-user {
 .stats-row, .stats-row a, .stats-row a:visited {
     color: #444444;
     font-size: 11px;
-}
-.fl {
-    float: left;
 }
 .cbt {
     clear: both;
@@ -1185,7 +1134,6 @@ a.comment-user {
     float: left;
     font-size: 110%;
     font-weight: bold;
-    height: 15px;
     padding: 4px 4px 5px;
     text-align: center;
     text-decoration: none;
@@ -1749,12 +1697,6 @@ tr.comment-hover{
 	margin-bottom: 8px;
 	border: 3px solid#eee;
 }
-.ask-mainbar {
-    width: 660px !important;
-}
-.ask-sidebar {
-	width: 270px !important;
-}
 .related {
     font-size: 90%;
     line-height: 120%;
@@ -1890,8 +1832,6 @@ tr.comment-hover{
 	margin-bottom: 15px;
 	overflow: auto;				
 }
-.fl {float:left;}
-
 /**popup**/
 .popup {
 	background-color: #fff;
