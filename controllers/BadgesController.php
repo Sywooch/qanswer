@@ -40,23 +40,17 @@ class BadgesController extends BaseController
 		);
 	}
 
-
 	public function actionView() 
     {
 		$badge = Badge::findOne(Yii::$app->request->get('id'));
 		$this->title = $badge->name.'徽章';
-//		$criteria=new CDbCriteria(array(
-//			'condition'	=> 't.badgeid='.$badge->id,
-//			'order'		=> 't.time DESC',
-//		));
         
         $awardQuery = \app\models\Award::find()->where('badgeid=:badgeid',[':badgeid'=>$badge->id]);
 
 		$total = $awardQuery->count();
 		$pages = new Pagination(['totalCount'=>$total]);
-//	    $pages->pageSize= Yii::app()->params['pages']['badgeAwardsPagesize'];
-//	    $pages->applyLimit($criteria);
-        $awards = $awardQuery->orderBy(['time'=>SORT_DESC])->all();
+	    $pages->pageSize= Yii::$app->params['pages']['badgeAwardsPagesize'];
+        $awards = $awardQuery->orderBy(['time'=>SORT_DESC])->offset($pages->offset)->limit($pages->limit)->all();
 
 		return $this->render('view',array(
 			'badge'		=> $badge,
@@ -68,7 +62,6 @@ class BadgesController extends BaseController
 
 	public function actionIndex()
 	{
-		$this->title = "徽章";
 		$badges = Badge::find()->all();
 		return $this->render('index',array('badges'=>$badges));
 	}

@@ -206,9 +206,6 @@ div.view
 .dno {
     display: none;
 }
-.pl {
-    padding-left: 10px;
-}
 #header {
 	height:120px;
 	margin:0pt auto;
@@ -275,15 +272,6 @@ a {
 }
 a:hover {
 	text-decoration:underline;
-}
-.user-list {
-	margin-right: 10px;
-	width: 225px;
-	height: 21px;
-	float: left;
-	text-align: left;
-	white-space: nowrap;
-	overflow: hidden;
 }
 .deleted-answer {
 	background-color: #e3d9d9;
