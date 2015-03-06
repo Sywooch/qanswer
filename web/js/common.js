@@ -180,8 +180,13 @@ iAsk.helpers = function() {
 iAsk.question = (function() {
 	return {
 		init : function(d) {
-			vote.init(d.questionId);
-			comments.init({edit:d.editCommentUrl,add:d.addCommentUrl,vote:d.voteCommentUrl,more:d.moreCommentsUrl});
+			vote.init();
+			comments.init({
+                edit:d.editCommentUrl,
+                add:d.addCommentUrl,
+                vote:d.voteCommentUrl,
+                more:d.moreCommentsUrl
+            });
 //			if (d.canViewVoteCounts) {
 //				vote.bindFetchVoteCounts()
 //			}
@@ -1810,7 +1815,7 @@ var vote = function() {
 	}
 	
 	return {
-		init : function(qid) {
+		init : function() {
 			promptToLogin = !(iAsk.options.user.isRegistered);
 //			hasOpenBounty = userHasOpenBounty;
 			if (promptToLogin) {
@@ -2056,10 +2061,6 @@ iAsk.vote_bounty = (function() {
 
 
 var comments = function() {
-	var editCommentUrl;
-	var addCommentUrl;
-	var voteCommentUrl;
-	var moreCommentsUrl;
 	var e;
 	var a = 600;
 	var getContext = function(postid, append) {
@@ -2102,23 +2103,6 @@ var comments = function() {
 		}, function() {
 			$(this).removeClass("comment-up-on")
 		});
-		/*
-		$(".comment-flag").click(function() {
-			if (confirm("Really flag this comment as noise, offensive or spam?")) {
-				voteComment($(this), 4, "comment-flag", "flag-on",function(t, data) {
-					if (data.NewScore == -1) {
-						t.parents("tr.comment").remove()
-					} else {
-						t.parents("tr.comment").find("img.comment-up").remove();
-						t.remove()
-					}
-				})
-			}
-		}).hover(function() {
-			$(this).addClass("flag-on")
-		}, function() {
-			$(this).removeClass("flag-on")
-		});*/
 		$(".comment-flag").click(function() {
 			var w = $(this).parents("tr.comment").attr("id").substr("comment-".length);
 			var x = $(this);
@@ -2453,7 +2437,7 @@ var comments = function() {
 	};
 	var showMoreComments = function(postid, s) {
 		if (!s) {
-			s = getContext(postid)
+			s = getContext(postid);
 		}
 		iAsk.helpers.addSpinner(s);
 		$.ajax( {

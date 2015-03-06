@@ -123,10 +123,6 @@ iAsk.heart = (function() {
             if (x && !("text" in jTextarea.data)) {
                 return $.Deferred().resolve().promise()
             }
-//            if (this.type === "answer") {
-//                var v = $("#answers-header .answers-subheader h2").text().replace(/ answers?/i, "") || "0";
-//                jTextarea.data.clientCount = v
-//            }
             gOffset = new Date().getTime();
             return $.ajax(jTextarea).promise()
         },
@@ -178,13 +174,13 @@ iAsk.heart = (function() {
             postId = 0;
             break;
         case "answer":
-            postId = location.href.match(/\/questions\/(\d+)/i)[1];
+            postId = jTextarea.attr('data-postid'); 
             break;
         }
         heartBeat.postId = postId;
-        jTextarea.keypress(function() {
+        jTextarea.change(function() {
             heartBeat.activate();
-        })
+        });
     }
     function _ensureDraftSaved(v) {
         if (!currentHeartManager || !currentHeartManager.checkActive()) {
@@ -205,14 +201,14 @@ iAsk.editor = (function() {
 			type = 'ask';
 		}
 		iAsk.editor.heartBeatUrl = requestUrl;
-		iAsk.heart.addHeart(type, $("#wmd-input"));
+		iAsk.heart.addHeart(type, $("#editor-input"));
 		$("#ask-form").submit(function(){
 			iAsk.navPrevention.stop();
 		});
 	};
     return {
         init: _init
-    }
+    };
 })();
 
 

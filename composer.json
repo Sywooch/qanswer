@@ -19,7 +19,6 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "c006/yii2-migration-utility": "dev-master",
-        "mdmsoft/yii2-admin": "~1.0",
         "yiisoft/yii2-jui": "~2.0",
 		"bower-asset/editor.md": ">=1.1.6"
     },

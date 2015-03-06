@@ -21,19 +21,5 @@ use yii\helpers\Url;
             <?= Html::submitButton('Login', ['class' => 'btn btn-success btn-block btn-lg', 'name' => 'login-button']) ?>
         </div>
         <?php ActiveForm::end(); ?>
-
-        <div id="third-login">
-            <h3>你也可以通过第三方账号进行登录！</h3>
-            <p>
-                <a href="<?php echo Url::to(['/oauth/login/index','type'=>'sina']);?>">
-                <img style="cursor: pointer;" src="<?php echo  \Yii::$app->request->baseUrl;?>/images/open/sina240.png">
-            </a>
-            </p>
-            <p>
-                <a href="<?php echo Url::to(['/oauth/login/index','type'=>'qq']);?>">
-                <img style="cursor: pointer;" src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_3.png">
-                </a>
-            </p>
-        </div>
     </div>
 </div>

@@ -941,8 +941,8 @@ class PostController extends BaseController
     public function actionComments()
     {
         $request = Yii::$app->request;
-        $op = $_GET['op'];
-        $commentId = intval($_GET['id']);
+        $op = $request->get('op');
+        $commentId = $request->get('id');
         $typeid = $request->get('typeid');
         $uid = Yii::$app->user->getId();
         $result = array(
@@ -958,15 +958,12 @@ class PostController extends BaseController
                     //自己或版主可以删除
 
                     if ($comment['uid'] == $this->me->id || $this->me->isMod() || $this->me->isAdmin()) {
-                        if ($comment->id == $this->me->id) {
-                            $comment->delete();
-                            $result['Success'] = true;
-                        }
+                        $comment->delete();
+                        $result['Success'] = true;
                     }
                     break;
                 case $this->voteTypeIds['upMod']:
-//                    $commentVote = CommentVote::model()->find('commentid=:commentid AND voteTypeId=:typeid AND uid=:uid', array('commentid' => $commentId, 'typeid' => $typeid, 'uid' => $uid));
-                    $commentVote = CommentVote::findOne(['commentid' => $commentId, 'voteTypeId' => $typeid, 'uid' => $uid]);// ('commentid=:commentid AND voteTypeId=:typeid AND uid=:uid', array('commentid' => $commentId, 'typeid' => $typeid, 'uid' => $uid));
+                    $commentVote = CommentVote::findOne(['commentid' => $commentId, 'voteTypeId' => $typeid, 'uid' => $uid]);
                     if ($commentVote) {
                         $result['Message'] = "已经投过票了";
                     } elseif ($comment->uid == Yii::$app->user->id) {
@@ -1104,7 +1101,8 @@ class PostController extends BaseController
                 $inbox->uid = $post->uid;
                 $inbox->save();
 
-                //邮件
+                //邮件 @todo 事件通知的方式实现
+                /*
                 $author = $post->author;
                 if (!empty($author->email) && $author->notify['commented']) {
                     if ($post->isAnswer()) {
@@ -1122,9 +1120,9 @@ class PostController extends BaseController
                     $subject = "您的帖子有新的评论：" . $qtitle;
                     MailQueue::addQueue($author->email, $subject, $body);
                 }
-
+                */
                 $comments = \app\models\Comment::findAll(['idv' => $post->id]);
-                echo $this->render('_comment_ajax', array('comments' => $comments));
+                echo $this->renderPartial('_comment_ajax', array('comments' => $comments));
             } else {  //显示全部评论
                 $postid = Yii::$app->request->get('id');
                 $comments = Comment::findAll(['idv' => $postid, 'status' => Comment::STATUS_OK]);

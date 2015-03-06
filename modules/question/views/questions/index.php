@@ -1,3 +1,6 @@
+<?php
+$this->title = $this->context->title;
+?>
 <div class="row">
     <div id="mainbar" class="col-md-9">
         <div class="subheader">

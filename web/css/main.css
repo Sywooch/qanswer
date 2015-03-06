@@ -733,13 +733,13 @@ a.comment-user {
     float: right;
     height: 13px;
     margin-top: 12px;
-    width: 21px;
+    width: 9px;
 }
 .stats {
     background: none repeat scroll 0 0 #EEEEEE;
     margin: 0 0 0 7px;
     padding: 4px 7px 6px;
-    width: 58px;
+    width: 70px;
 }
 .narrow .stats {
 	background: none;
@@ -1437,10 +1437,6 @@ a.comment-user {
 }
 .expander-arrow-show {
     background-position: 5px -905px;
-}
-.user-info {
-    height: 35px;
-    width: 185px;
 }
 .vm {
     vertical-align: middle;

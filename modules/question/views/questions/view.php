@@ -10,11 +10,10 @@ $this->title = $model->title;
 <script type="text/javascript">
 $(function(){
     iAsk.question.init({
-        questionId:22,
-        editCommentUrl:	"<?php echo Url::to('/post/comments');?>",
-        addCommentUrl:	"<?php echo Url::to('/post/view');?>",
-        voteCommentUrl:	"<?php echo Url::to('/post/comments');?>",
-        moreCommentsUrl:"<?php echo Url::to('/post/view');?>",
+        editCommentUrl:	"<?php echo Url::to('/question/post/comments');?>",
+        addCommentUrl:	"<?php echo Url::to('/question/post/view');?>",
+        voteCommentUrl:	"<?php echo Url::to('/question/post/comments');?>",
+        moreCommentsUrl:"<?php echo Url::to('/question/post/view');?>",
         hasOpenBounty:<?php if (Yii::$app->controller->hasOpenBounty):?>true<?php else:?>false<?php endif;?>,
         canOpenBounty:<?php if (Yii::$app->controller->me && Yii::$app->controller->me->checkPerm('setBounties') && !Yii::$app->controller->hasOpenBounty):?>true<?php else:?>false<?php endif;?>,            
     });
@@ -96,7 +95,6 @@ $(function(){
                         ),
                         'options' => ['id' => 'tabs', 'class' => 'nav nav-tabs']
                     );
-                    $tab = (!isset($_GET['tab'])) ? 'activity' : $_GET['tab'];
                     switch ($tab) {
                         case 'activity':
                             $submenu['items'][0]['options']['class'] = 'active';
@@ -137,6 +135,7 @@ $(function(){
                         <?=
                         $this->render('/questions/_answerform', [
                             'model' => $answer,
+                            'question' => $model,
                         ]);
                         ?>
                     </div>
@@ -149,17 +148,10 @@ $(function(){
                         });
                     });
                 </script>
-                <script type="text/javascript">
-                    $(function () {
-                        iAsk.editor.init("<?php echo yii\helpers\Url::to('post/heartbeat'); ?>", 'answer');
-                        iAsk.navPrevention.init($('#wmd-input'));
-                    });
-                </script>
             </div>
     <?php endif; ?>
     </div>
     <div id="sidebar" class="col-md-3">
-
         <div class="module">
             <p class="label-key">标签</p>
             <div class="tagged">
@@ -176,7 +168,6 @@ $(function(){
                 <p><span class="label-key">最后活动</span><span class="label-value"><?php echo Formatter::ago($model->activity); ?></span></p>			
             </div>
         </div>
-        <?php $this->render('/common/_sidebar_adv', array('position' => 'questions.view.side.1')) ?>
         <div class="module">
             <h4 id="h-related">相关问题</h4>
             <div class="related">

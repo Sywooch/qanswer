@@ -74,36 +74,32 @@ class QuestionsController extends BaseController
             $question->updateCounters(array('viewcount' => 1), 'id=:id', array(':id' => $question->id));
         }
 
-        $tab = isset($_GET['tab']) ? $_GET['tab'] : '';
+        $tab = Yii::$app->request->get('tab', 'activity');
 
         $query = Post::find()->where('post.idv=:idv AND post.idtype=:idtype', [':idv' => $question->id, ':idtype' => Post::IDTYPE_A]);
         switch ($tab) {
             case 'votes':
-                $criteria->order = 't.accepted DESC,t.score DESC';
+                $query->orderBy(['post.accepted' => SORT_DESC, 'post.score' => SORT_DESC]);
+                break;
+            case 'oldest':
+                $query->orderBy(['post.accepted' => SORT_DESC, 'post.createtime' => SORT_DESC]);
                 break;
             case 'activity':
-                $criteria->order = 't.accepted DESC,t.activity DESC';
-                break;
             default:
-//				$criteria->order = 't.accepted DESC,t.createtime DESC';
-                $query->orderBy(['post.accepted' => SORT_DESC, 'post.createtime' => SORT_DESC]);
+                $query->orderBy(['post.accepted' => SORT_DESC, 'post.activity' => SORT_DESC]);
                 break;
         }
 
         if (!Yii::$app->user->isGuest) {
             $query->select(["post.*", "vote.useful as hasVote", "vote.fav as hasFav"])
-                    ->leftJoin('vote', 'vote.postid=post.id AND vote.uid=:uid', [':uid' => Yii::$app->user->getId()]);
-//			$criteria->select = "t.*,v.useful as hasVote,v.fav as hasFav";
-//			$criteria->join = "LEFT JOIN {{vote}} v ON v.postid=t.id AND v.uid=".Yii::$app->user->getId();;
+                  ->leftJoin('vote', 'vote.postid=post.id AND vote.uid=:uid', [':uid' => Yii::$app->user->getId()]);
         }
 
         $pages = new Pagination(['totalCount' => $question->answercount]);
         $pages->pageSize = Yii::$app->params['pages']['answer'];
         $answers = $query->with('author')->all();
-//		$answers = Post::model()->with(array('author','comments'=>array('together'=>false),'poststate','revCount','comments.commentauthor'=>array('together'=>false)))->findAll($criteria);
         $tags = Tag::findAll(['name' => explode(' ', $question->tags)]);
 
-//		Yii::$app->clientScript->registerMetaTag($question->excerpt, 'description');
         $this->pageDescription = $question->excerpt;
         return $this->render('view', [
             'model' => $question,
@@ -113,6 +109,7 @@ class QuestionsController extends BaseController
             'pages' => $pages,
             'relatedQuestions' => $relatedQuestions,
             'viewcount' => $question->viewcount,
+            'tab' => $tab,
         ]);
     }
 
@@ -339,7 +336,7 @@ class QuestionsController extends BaseController
     public function loadModel()
     {
         if ($this->model === null) {
-            if (isset($_GET['id'])) {
+            if (Yii::$app->request->get('id')) {
 
                 $query = Post::find();
                 if (!Yii::$app->user->isGuest) {
@@ -347,15 +344,6 @@ class QuestionsController extends BaseController
                     $query->leftJoin('vote', 'vote.postid=post.id AND vote.uid=:uid', [':uid' => Yii::$app->user->getId()]);
                 }
                 $this->model = $query->where(['post.id' => Yii::$app->request->get('id')])->one();
-//				$this->model=Post::model()->with(array(
-//					'author',
-//					'bounties',
-//					'poststate',
-//					'revCount',
-//					'comments'=>array('limit'=>3,'together'=>false),
-//					'comments.commentauthor',
-//					'comments.myvotes',
-//				))->findByPk($_GET['id'],$criteria);
             }
             if ($this->model === null || !$this->model->isQuestion())
                 throw new \yii\web\NotFoundHttpException(404, '请求页面不存在.');
@@ -403,7 +391,6 @@ class QuestionsController extends BaseController
                 if ($post->checkExistAnswer($uid)) {
                     return NULL;
                 }
-//				$answer->attributes = $_POST['Post'];
                 $answer->load(Yii::$app->request->post());
 
                 if ($post->addAnswer($answer)) {

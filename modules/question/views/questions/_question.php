@@ -46,7 +46,7 @@ use app\components\Formatter;
             }
             ?>
         </div>
-        <div class="started fr">
+        <div class="started">
             <div class="user-info">
             	<div class="user-action-time">提问
             		<span class="relativetime" title="<?php echo Formatter::time($data->createtime);?>"><?php echo Formatter::ago($data->createtime);?></span>

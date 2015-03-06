@@ -4,7 +4,7 @@ use yii\helpers\Html;
 ?>
 <?php $form=  ActiveForm::begin(array('id'=>'ask-form')); ?>
     <div id="editor-textarea">
-    <?php echo Html::activeTextArea($model,'content',array('rows'=>10, 'cols'=>92,'id'=>'wmd-input')); ?>
+    <?php echo Html::activeTextArea($model,'content',array('rows'=>10, 'cols'=>92,'id'=>'editor-input', 'data-postid' => $question->id)); ?>
     </div>
     <div class="community-option">
         <?php echo Html::activeCheckbox($model,'wiki');?>

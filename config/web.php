@@ -45,7 +45,7 @@ $config = [
             'enablePrettyUrl' => true,
         ],
         'authManager' => [
-            'class' => 'yii\rbac\PhpManager', // or use 'yii\rbac\DbManager'
+            'class' => 'yii\rbac\DbManager',
         ],
         'i18n' => [
             'translations' => [
@@ -73,6 +73,14 @@ $config = [
                         'formatter' => 'posts.php',
                     ],
                 ],
+                'rbac-admin' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en-US',
+                    'fileMap' => [
+                        'formatter' => 'rbac-admin.php',
+                    ],
+                ],
             ],
         ],
     ],
@@ -86,30 +94,13 @@ $config = [
         'question' => [
             'class' => 'app\modules\question\Module',
         ],
-        'admin' => [
-            'class' => 'mdm\admin\Module',
-//            'layout' => 'left-menu', // avaliable value 'left-menu', 'right-menu' and 'top-menu'
-//            'controllerMap' => [
-//                 'assignment' => [
-//                    'class' => 'mdm\admin\controllers\AssignmentController',
-//                    'userClassName' => 'app\models\User',
-//                    'idField' => 'user_id'
-//                ]
-//            ],
-//            'menus' => [
-//                'assignment' => [
-//                    'label' => 'Grand Access' // change label
-//                ],
-//                'route' => null, // disable menu
-//            ],
-        ]        
+        'rights' => [
+            'class' => 'snowpine\rights\Module',
+        ],
     ],
-//    'as access' => [
-//        'class' => 'mdm\admin\components\AccessControl',
-//        'allowActions' => [
-//            'admin/*', // add or remove allowed actions to this list
-//        ]
-//    ],
+    'aliases' => [
+        '@snowpine/rights' => '@app/modules/rights',
+    ],
     'params' => $params,
 ];
 
