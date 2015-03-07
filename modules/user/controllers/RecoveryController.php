@@ -5,7 +5,9 @@ namespace app\modules\user\controllers;
 use Yii;
 use yii\base\Model;
 use app\components\BaseController;
+use app\modules\user\Module;
 use app\modules\user\models\RecoveryForm;
+use app\modules\user\models\Token;
 
 /**
  * Description of RecoveryController
@@ -22,19 +24,14 @@ class RecoveryController extends BaseController
      */
     public function actionRequest()
     {
-        $model = new RecoveryForm;
-//        if (!$this->module->enablePasswordRecovery) {
-//            throw new NotFoundHttpException;
-//        }
-//        $model = \Yii::createObject([
-//                    'class' => RecoveryForm::className(),
-//                    'scenario' => 'request',
-//        ]);
+        $model = new RecoveryForm();
+        $model->scenario = 'request';
         $this->performAjaxValidation($model);
+        
         if ($model->load(\Yii::$app->request->post()) && $model->sendRecoveryMessage()) {
             return $this->render('/message', [
-                        'title' => \Yii::t('user', 'Recovery message sent'),
-                        'module' => $this->module,
+                'title' => \app\modules\user\Module::t('user', 'Recovery message sent'),
+                'module' => $this->module,
             ]);
         }
         return $this->render('request', [
@@ -50,32 +47,23 @@ class RecoveryController extends BaseController
      * @throws \yii\web\NotFoundHttpException
      */
 //    public function actionReset($id, $code)
-    public function actionReset()
+    public function actionReset($id, $code)
     {
-//        if (!$this->module->enablePasswordRecovery) {
-//            throw new NotFoundHttpException;
-//        }
         /** @var Token $token */
-//        $token = $this->finder->findToken(['user_id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY])->one();
-//        if ($token === null || $token->isExpired || $token->user === null) {
-//            \Yii::$app->session->setFlash('danger', \Yii::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.'));
-//            return $this->render('/message', [
-//                        'title' => \Yii::t('user', 'Invalid or expired link'),
-//                        'module' => $this->module,
-//            ]);
-//        }
-//        $model = \Yii::createObject([
-//                    'class' => RecoveryForm::className(),
-//                    'scenario' => 'reset',
-//        ]);
-//        $this->performAjaxValidation($model);
-//        if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword($token)) {
-//            return $this->render('/message', [
-//                        'title' => \Yii::t('user', 'Password has been changed'),
-//                        'module' => $this->module,
-//            ]);
-//        }
-        $model = new RecoveryForm;
+        $token = Token::findOne(['id' => $id, 'code' => $code, 'type' => Token::TYPE_RECOVERY]);
+        if ($token === null || $token->isExpired || $token->user === null) {
+            \Yii::$app->session->setFlash('danger', Module::t('user', 'Recovery link is invalid or expired. Please try requesting a new one.'));
+            return $this->render('/message', [
+                'title' => Module::t('user', 'Invalid or expired link'),
+            ]);
+        }
+        $model = new RecoveryForm(['scenario' => 'reset']);
+        $this->performAjaxValidation($model);
+        if ($model->load(\Yii::$app->getRequest()->post()) && $model->resetPassword($token)) {
+            return $this->render('/message', [
+                'title' => \Yii::t('user', 'Password has been changed'),
+            ]);
+        }
         return $this->render('reset', [
             'model' => $model,
         ]);
