@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use app\modules\user\Module;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -15,6 +16,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $password1
  * @property string $password
+ * @property string $password_hash
  * @property integer $active
  * @property string $activekey
  * @property string $salt
@@ -34,9 +36,11 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    const BEFORE_USER_REGISTER = 'before_user_register';
+    const AFTER_USER_REGISTER = 'after_user_register';
 
     /**
-     * 帐号未激活
+     * 帐号状态
      */
     const STATUS_NOACTIVE = 0;
     const STATUS_ACTIVE = 1;
@@ -72,48 +76,77 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
+//    public function rules()
+//    {
+//        return [
+//            [['username', 'email', 'password1', 'password', 'active', 'activekey', 'salt', 'lastlogin', 'registertime', 'gold', 'silver', 'bronze', 'votedcount', 'editedcount', 'messagecount', 'status'], 'required'],
+//            [['active', 'groupid', 'lastlogin', 'registertime', 'gold', 'silver', 'bronze', 'reputation', 'votedcount', 'editedcount', 'messagecount', 'lastseen', 'status', 'setting'], 'integer'],
+//            [['username'], 'string', 'max' => 30],
+//            [['password1', 'activekey'], 'string', 'max' => 128],
+//            [['password'], 'string', 'max' => 32],
+//            // email rules
+//            ['email', 'required'],
+//            ['email', 'email'],
+//            ['email', 'string', 'max' => 255],
+//            ['email', 'unique'],
+//            ['email', 'trim'],
+//        ];
+//    }
+    
+    /** @inheritdoc */
+    public function scenarios()
+    {
+        return [
+            'register' => ['email', 'password'],
+            'update'   => ['email', 'password'],
+        ];
+    }    
+    /** @inheritdoc */
     public function rules()
     {
         return [
-            [['username', 'email', 'password1', 'password', 'active', 'activekey', 'salt', 'lastlogin', 'registertime', 'gold', 'silver', 'bronze', 'votedcount', 'editedcount', 'messagecount', 'status'], 'required'],
-            [['active', 'groupid', 'lastlogin', 'registertime', 'gold', 'silver', 'bronze', 'reputation', 'votedcount', 'editedcount', 'messagecount', 'lastseen', 'status', 'setting'], 'integer'],
-            [['username'], 'string', 'max' => 30],
-            [['email'], 'string', 'max' => 75],
-            [['password1', 'activekey'], 'string', 'max' => 128],
-            [['password'], 'string', 'max' => 32],
-            [['salt'], 'string', 'max' => 6]
+            // email rules
+            ['email', 'required', 'on' => ['register', 'update']],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique'],
+            ['email', 'trim'],
+            // password rules
+            ['password', 'required', 'on' => ['register']],
+            ['password', 'string', 'min' => 6],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'username' => Yii::t('app', 'Username'),
-            'email' => Yii::t('app', 'Email'),
-            'password1' => Yii::t('app', 'Password1'),
-            'password' => Yii::t('app', 'Password'),
-            'active' => Yii::t('app', 'Active'),
-            'activekey' => Yii::t('app', 'Activekey'),
-            'salt' => Yii::t('app', 'Salt'),
-            'groupid' => Yii::t('app', 'Groupid'),
-            'lastlogin' => Yii::t('app', 'Lastlogin'),
-            'registertime' => Yii::t('app', 'Registertime'),
-            'gold' => Yii::t('app', 'Gold'),
-            'silver' => Yii::t('app', 'Silver'),
-            'bronze' => Yii::t('app', 'Bronze'),
-            'reputation' => Yii::t('app', 'Reputation'),
-            'votedcount' => Yii::t('app', 'Votedcount'),
-            'editedcount' => Yii::t('app', 'Editedcount'),
-            'messagecount' => Yii::t('app', 'Messagecount'),
-            'lastseen' => Yii::t('app', 'Lastseen'),
-            'status' => Yii::t('app', 'Status'),
-            'setting' => Yii::t('app', 'Setting'),
-        ];
-    }
+//    public function attributeLabels()
+//    {
+//        return [
+//            'id' => Yii::t('app', 'ID'),
+//            'username' => Yii::t('app', 'Username'),
+//            'email' => Yii::t('app', 'Email'),
+//            'password1' => Yii::t('app', 'Password1'),
+//            'password' => Yii::t('app', 'Password'),
+//            'active' => Yii::t('app', 'Active'),
+//            'activekey' => Yii::t('app', 'Activekey'),
+//            'salt' => Yii::t('app', 'Salt'),
+//            'groupid' => Yii::t('app', 'Groupid'),
+//            'lastlogin' => Yii::t('app', 'Lastlogin'),
+//            'registertime' => Yii::t('app', 'Registertime'),
+//            'gold' => Yii::t('app', 'Gold'),
+//            'silver' => Yii::t('app', 'Silver'),
+//            'bronze' => Yii::t('app', 'Bronze'),
+//            'reputation' => Yii::t('app', 'Reputation'),
+//            'votedcount' => Yii::t('app', 'Votedcount'),
+//            'editedcount' => Yii::t('app', 'Editedcount'),
+//            'messagecount' => Yii::t('app', 'Messagecount'),
+//            'lastseen' => Yii::t('app', 'Lastseen'),
+//            'status' => Yii::t('app', 'Status'),
+//            'setting' => Yii::t('app', 'Setting'),
+//        ];
+//    }
     
     public function afterFind()
     {
@@ -304,6 +337,49 @@ class User extends ActiveRecord implements IdentityInterface
     public function isMod()
     {
         return ($this->groupid == self::GROUP_MOD);
+    }
+    
+    /**
+     * @return string
+     */
+    protected function getFlashMessage()
+    {
+        if (Yii::$app->getModule('user')->enableConfirmation) {
+            return Module::t('user', 'A message has been sent to your email address. It contains a confirmation link that you must click to complete registration.');
+        } else {
+            return Module::t('user', 'Welcome! Registration is complete.');
+        }
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($insert) {
+            $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+            $this->registertime = time();
+        }
+        return parent::beforeSave($insert);;
+    }
+    
+    public function register()
+    {
+        $this->trigger(self::BEFORE_USER_REGISTER);
+        
+        if ($this->save()) {
+            $this->trigger(self::AFTER_USER_REGISTER);
+            $userstat = new UserStat();
+            $userstat->id = $this->id;
+            $userstat->save();
+//          print_r($userstat->errors);
+            $userprofile = new UserProfile;
+            $userprofile->id = $this->id;
+            $userprofile->save();
+//            print_r($userprofile->errors);
+//            exit;
+            \Yii::$app->session->setFlash('info', $this->getFlashMessage());
+            return true;
+            //@todo 发送激活邮件
+        }
+        return false;
     }
 
 }

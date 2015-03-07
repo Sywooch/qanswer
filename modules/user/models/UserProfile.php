@@ -34,7 +34,7 @@ class UserProfile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['realname', 'birthday', 'location', 'aboutme', 'complete', 'preference', 'unpreference'], 'required'],
+//            [['realname', 'birthday', 'location', 'aboutme', 'complete', 'preference', 'unpreference'], 'required'],
             [['birthday'], 'safe'],
             [['aboutme', 'preference', 'unpreference'], 'string'],
             [['complete'], 'integer'],
@@ -47,30 +47,33 @@ class UserProfile extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'realname' => Yii::t('app', 'Realname'),
-            'birthday' => Yii::t('app', 'Birthday'),
-            'location' => Yii::t('app', 'Location'),
-            'website' => Yii::t('app', 'Website'),
-            'aboutme' => Yii::t('app', 'Aboutme'),
-            'complete' => Yii::t('app', 'Complete'),
-            'preference' => Yii::t('app', 'Preference'),
-            'unpreference' => Yii::t('app', 'Unpreference'),
-        ];
-    }
+//    public function attributeLabels()
+//    {
+//        return [
+//            'id' => Yii::t('app', 'ID'),
+//            'realname' => Yii::t('app', 'Realname'),
+//            'birthday' => Yii::t('app', 'Birthday'),
+//            'location' => Yii::t('app', 'Location'),
+//            'website' => Yii::t('app', 'Website'),
+//            'aboutme' => Yii::t('app', 'Aboutme'),
+//            'complete' => Yii::t('app', 'Complete'),
+//            'preference' => Yii::t('app', 'Preference'),
+//            'unpreference' => Yii::t('app', 'Unpreference'),
+//        ];
+//    }
 
     /**
      * @inheritdoc
      */
     public function beforeSave($insert)
     {
-        parent::beforeSave($insert);
+        if ($insert) {
+            $this->preference = '';
+            $this->unpreference = '';
+        }
         $this->preference = (is_array($this->preference)) ? implode(' ', $this->preference) : $this->preference;
         $this->unpreference = (is_array($this->unpreference)) ? implode(' ', $this->unpreference) : $this->unpreference;
-        return true;
+        return parent::beforeSave($insert);
     }
 
     public function afterFind()

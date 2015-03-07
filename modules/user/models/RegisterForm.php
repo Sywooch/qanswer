@@ -2,29 +2,42 @@
 namespace app\modules\user\models;
 
 use yii\base\Model;
-use app\models\User;
+use app\modules\user\Module;
 
 class RegisterForm extends Model
 {
     public $password;
-	public $password2;
     public $email;
-	public $verifyCode;
+    
+    /** @var User */
+    protected $user;
 
-	const EMAIL_VERIFY = 1;
-	const MOD_VERIFY = 2;
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        $this->user = new User;
+        $this->user->setScenario('register');
+    }
 
-	public function rules()
-	{
-		return [
-			[['email', 'password', 'password2'], 'required'],
-			['email', 'email'],
-//			array('password', 'length', 'max'=>128, 'min' => 6,'message' => "密码至少4个字符"),
-//			array('password2', 'compare','compareAttribute'=>'password'),
-//			array('email', 'unique', 'message' => "该邮箱地址已经存在"),
-//			array('verifyCode', 'captcha', 'captchaAction'=>'users/captcha', 'message' => '输入的验证码不正确'),
-		];
-	}
+    /** 
+     * @inheritdoc 
+     */
+    public function rules()
+    {
+        return [
+            ['email', 'filter', 'filter' => 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'unique', 'targetClass' => User::className(),
+                'message' => Module::t('user', 'This email address has already been taken')],
+
+            ['password', 'required'],
+            ['password', 'string', 'min' => 6],
+        ];
+    }    
 
 	/**
 	 * Declares attribute labels.
@@ -32,24 +45,22 @@ class RegisterForm extends Model
 	public function attributeLabels()
 	{
 		return array(
-			'email'		=> '电子邮箱',
-			'password'	=> '密码',
-			'password2'	=> '确认密码',
-			'verifyCode'=> '验证码'
+			'email'		=> Module::t('user', 'Email'),
+			'password'	=> Module::t('user', 'Password'),
 		);
 	}
     
-    public function Register()
+    public function register()
     {
-        if ($this->validate()) {
-            $user = new User();
-            $user->email = $this->email;
-            $user->setPassword($this->password);
-            $user->generateAuthKey();
-            if ($user->save()) {
-                return $user;
-            }
+        if (!$this->validate()) {
+            return false;
         }
-        return null;
+
+        $this->user->setAttributes([
+            'email'    => $this->email,
+            'password' => $this->password
+        ]);
+
+        return $this->user->register();
     }
 }

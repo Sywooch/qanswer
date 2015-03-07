@@ -5,6 +5,9 @@ namespace app\modules\user;
 class Module extends \yii\base\Module
 {
 
+    /** @var bool Whether user has to confirm his account. */
+    public $enableConfirmation = true;
+    
     public $controllerNamespace = 'app\modules\user\controllers';
 
     public function init()

@@ -2,10 +2,12 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
-
+/**
+ * @var app\modules\user\models\RegisterForm $model
+ */
 $this->title = '会员注册';
 ?>
-
+<?php print_r($model->errors);?>
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <div class="panel panel-default">
@@ -16,14 +18,13 @@ $this->title = '会员注册';
                 <?php
                 $form = ActiveForm::begin([
                     'id' => 'register-form',
-                    'enableAjaxValidation' => true,
-                    'enableClientValidation' => false
+//                    'enableAjaxValidation' => true,
+//                    'enableClientValidation' => false
                 ]);
                 ?>
                 <?= $form->field($model, 'email') ?>
                 <?= $form->field($model, 'password')->passwordInput() ?>
-                <?= $form->field($model, 'password2')->passwordInput(); ?>
-                <?= Html::submitButton(app\modules\user\Module::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block btn-lg']) ?>
+                <?= Html::submitButton(app\modules\user\Module::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
                 <?php ActiveForm::end(); ?>
             </div>
         </div>

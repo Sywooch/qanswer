@@ -90,8 +90,8 @@ AppAsset::register($this);
                         Yii::$app->user->isGuest ?
                             ['label' => 'Login', 'url' => ['user/user/login']] :
                             ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                                'url' => ['/site/logout'],
-                                'linkOptions' => ['data-method' => 'post']],
+                                'url' => ['/user/user/logout'],
+                            ],
                     ],
                 ]);
                 NavBar::end();
@@ -107,23 +107,27 @@ AppAsset::register($this);
 	<div class="container">
 		<?php echo $content; ?>
 	</div>
-	<div id="footer">
-		<div class="footerwrap">
-			<div id="footer-menu">
-				<a href="<?php echo Url::to('about/index');?>">关于</a>
-				|
-				<a href="http://blog.ilewen.com">博客</a>
-				|
-				<a href="mailto:services@ilewen.com">联系我们</a>				
-			</div>
-			<div id="copy">
-			&copy; <?php echo date('Y'); ?> 乐问&nbsp;&nbsp;
-				本站内容采用&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/cn/" rel="license"><img src="http://i.creativecommons.org/l/by-sa/2.5/cn/80x15.png" class="cc-icon" alt="知识共享许可协议"> <strong>知识共享署名-相同方式共享 2.5 中国大陆许可协议</strong></a>
-			 &nbsp;&nbsp;<?php // echo $this->options['miibeian'];?>
-			</div>
-			<span class="right"><?php // echo Yii::$app->params['version']['release'];?></span>
-		</div>
-	</div>
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="footer-menu">
+                        <a href="<?php echo Url::to('about/index');?>">关于</a>
+                        |
+                        <a href="http://blog.ilewen.com">博客</a>
+                        |
+                        <a href="mailto:services@ilewen.com">联系我们</a>				
+                    </div>
+                    <div id="copy">
+                    &copy; <?php echo date('Y'); ?> 乐问&nbsp;&nbsp;
+                        本站内容采用&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/cn/" rel="license"><img src="http://i.creativecommons.org/l/by-sa/2.5/cn/80x15.png" class="cc-icon" alt="知识共享许可协议"> <strong>知识共享署名-相同方式共享 2.5 中国大陆许可协议</strong></a>
+                     &nbsp;&nbsp;<?php // echo $this->options['miibeian'];?>
+                    </div>
+                    <span class="right"><?php // echo Yii::$app->params['version']['release'];?></span>
+                </div>
+            </div>
+        </div>
+    </footer>
 <?php $this->endBody() ?>
 </body>
 </html>
