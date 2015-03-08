@@ -472,8 +472,7 @@ table {
 	width:175px;
 }
 .user-info {
-	height:35px;
-	width:185px;
+	margin-bottom: 80px;
 }
 .user-info .user-action-time {
 	margin-bottom:4px;
@@ -491,9 +490,6 @@ table {
 .user-info .user-details {
 	float:left;
 	margin-left:5px;
-	overflow:hidden;
-	white-space:nowrap;
-	width:145px;
 }
 .user-details {
 	color:#888888;
@@ -770,9 +766,6 @@ a.comment-user {
     float: left;
     line-height: 18px;
 }
-.fr {
-    float: right;
-}
 .started {
     color: #999999;
     float: right;
@@ -941,10 +934,6 @@ a.comment-user {
     font-size: 120%;
     font-weight: bold;
     padding: 20px;
-}
-#user-browser {
-    margin-left: 5px !important;
-    margin-top: -15px;
 }
 .user-tags, .user-tags a {
     color: #888888;

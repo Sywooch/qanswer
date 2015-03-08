@@ -340,6 +340,84 @@ class User extends ActiveRecord implements IdentityInterface
         return ($this->groupid == self::GROUP_MOD);
     }
     
+    public function getReputationByFilter($filter='')
+    {
+        switch($filter) {
+            case 'month':
+                $rep = $this->stats->monthreps;
+                $title = '本月获取威望';
+                break;
+            case 'quarter':
+                $rep = $this->stats->quarterreps;
+                $title = '本季度获取威望';
+                break;
+            case 'year':
+                $rep = $this->stats->yearreps;
+                $title = '今年获取威望';
+                break;
+            case 'all':
+                $rep = $this->reputation;
+                $title = '总威望';
+                break;
+            case 'week':
+                $rep = $this->stats->weekreps;
+                $title = '本周获取威望';
+                break;
+            default:
+            $rep = $this->reputation;
+            $title = '总威望';
+		}
+        return ['title' => $title, 'reputationCount' => $rep];
+    }
+    
+    public function getEditsByFilter($filter='')
+    {
+        switch($filter) {
+            case 'month':
+                $edits = $this->stats->monthedits;
+                break;
+            case 'quarter':
+                $edits = $this->stats->quarteredits;
+                break;
+            case 'year':
+                $edits = $this->stats->yearedits;
+                break;
+            case 'all':
+                $edits = $this->stats->editcount;
+                break;
+            case 'week':
+            default:
+                $edits = $this->stats->weekedits;
+                break;
+
+        }
+        return $edits.' 次编辑';        
+    }
+    
+    public function getVotesByFilter($filter = '')
+    {
+        switch($filter) {
+            case 'month':
+                $votes = $this->stats->monthvotes;
+                break;
+            case 'quarter':
+                $votes = $this->stats->quartervotes;
+                break;
+            case 'year':
+                $votes = $this->stats->yearvotes;
+                break;
+            case 'all':
+                $votes = $this->stats->upvotecount+$this->stats->downvotecount;
+                break;
+            case 'week':
+            default:
+                $votes = $this->stats->weekvotes;
+                break;
+
+        }
+        return $votes.' 次投票';        
+    }
+    
     /**
      * Resets password.
      *
@@ -381,12 +459,9 @@ class User extends ActiveRecord implements IdentityInterface
             $userstat = new UserStat();
             $userstat->id = $this->id;
             $userstat->save();
-//          print_r($userstat->errors);
             $userprofile = new UserProfile;
             $userprofile->id = $this->id;
             $userprofile->save();
-//            print_r($userprofile->errors);
-//            exit;
             \Yii::$app->session->setFlash('info', $this->getFlashMessage());
             return true;
             //@todo 发送激活邮件
