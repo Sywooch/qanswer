@@ -7,21 +7,14 @@
         <h1 id="h-users">用户列表</h1>
 		<?= \yii\widgets\Menu::widget($menu); ?>
     </div>
-
-	<div style="padding-bottom: 10px;" class="page-description">
-	    <table style="width: 100%;">
-	        <tbody>
-				<tr>
-					<td>
-						查找:<input type="text" style="margin-left: 10px;" value="" class="userfilter" name="userfilter" id="userfilter">
-		            </td>
-		            <td style="text-align: right;">
-                        <?= \yii\widgets\Menu::widget($submenu); ?>
-					</td>
-				</tr>
-			</tbody>
-	    </table>
-	</div>
+    <div class="row row-space-4">
+        <div class="col-md-6">
+            查找:<input type="text" style="margin-left: 10px;" value="" class="userfilter" name="userfilter" id="userfilter">
+        </div>
+        <div class="col-md-6">
+            <?= \yii\widgets\Menu::widget($submenu); ?>
+        </div>
+    </div>
 
 	<div id="user-browser">
         <div class="row">

@@ -75,58 +75,6 @@ ol {
 	margin-left: 30px;
 	margin-bottom: 1em;
 }
-.space {
-    padding-top: 20px;
-}
-.ptr {cursor: pointer;}
-ul {
-	list-style: disc;
-	margin-left: 30px;
-	margin-bottom: 1em;
-}
-div.flash-error, div.flash-notice, div.flash-success
-{
-	padding:.8em;
-	margin-bottom:1em;
-	border:2px solid #ddd;
-}
-
-div.flash-error
-{
-	background:#FBE3E4;
-	color:#8a1f11;
-	border-color:#FBC2C4;
-}
-
-div.flash-notice
-{
-	background:#FFF6BF;
-	color:#514721;
-	border-color:#FFD324;
-}
-
-div.flash-success
-{
-	background:#E6EFC2;
-	color:#264409;
-	border-color:#C6D880;
-}
-
-div.flash-error a
-{
-	color:#8a1f11;
-}
-
-div.flash-notice a
-{
-	color:#514721;
-}
-
-div.flash-success a
-{
-	color:#264409;
-}
-
 div.form .rememberMe label
 {
 	display: inline;
@@ -909,10 +857,7 @@ a.comment-user {
 }
 .subtabs {
     float: right;
-    font-weight: bold;
-    width: 100%;
 }
-
 .subtabs li {
     border: 1px solid #CCCCCC;
     color: #808185;
@@ -924,11 +869,13 @@ a.comment-user {
     text-decoration: none;
 }
 
-.subtabs li a.youarehere {
+.subtabs li.active {
     background-color: #808185;
     border: 1px solid #808185;
     color: #FFFFFF;
-    font-weight: bold;
+}
+.subtabs li.active a {
+	color: #FFFFFF;
 }
 .no-search-results {
     font-size: 120%;
@@ -2110,4 +2057,71 @@ ul.setting-notify li label {margin-left:10px;}
 .draft-saved {
 	margin-top: 6px; height: 24px; display: none;margin-right:10px;
 }
-.share {overflow:hidden;margin-top:10px;}
+
+.row-full-height {
+	height: 100%
+}
+
+.row-space-1 {
+	margin-bottom: 6.25px
+}
+
+.row-space-top-1 {
+	margin-top: 6.25px
+}
+
+.row-space-2 {
+	margin-bottom: 12.5px
+}
+
+.row-space-top-2 {
+	margin-top: 12.5px
+}
+
+.row-space-3 {
+	margin-bottom: 18.75px
+}
+
+.row-space-top-3 {
+	margin-top: 18.75px
+}
+
+.row-space-4 {
+	margin-bottom: 25px
+}
+
+.row-space-top-4 {
+	margin-top: 25px
+}
+
+.row-space-5 {
+	margin-bottom: 31.25px
+}
+
+.row-space-top-5 {
+	margin-top: 31.25px
+}
+
+.row-space-6 {
+	margin-bottom: 37.5px
+}
+
+.row-space-top-6 {
+	margin-top: 37.5px
+}
+
+.row-space-7 {
+	margin-bottom: 43.75px
+}
+
+.row-space-top-7 {
+	margin-top: 43.75px
+}
+
+.row-space-8 {
+	margin-bottom: 50px
+}
+
+.row-space-top-8 {
+	margin-top: 50px
+}

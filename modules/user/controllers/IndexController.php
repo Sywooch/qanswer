@@ -47,7 +47,7 @@ class IndexController extends BaseController
                 $order = $this->_getOrder($tab, $sort);
                 $registertime = time() - 30 * 86400;
 
-                $userQuery->where('registertime>:time', [':time' => $registertime])->joinWith('stats')->orderBy($order);
+                $userQuery->where('registertime>:time', [':time' => $registertime])->joinWith('stats')->with('profile')->orderBy($order);
                 break;
             case 'voters':
                 $filter = Yii::$app->request->get('filter', 'week');
@@ -56,7 +56,7 @@ class IndexController extends BaseController
                 
                 $userQuery->joinWith(['stats' => function($query) use ($votesTh) {
                     $query->where('upvotecount>:votes', [':votes' => $votesTh]);
-                }])->orderBy($order);
+                }])->with('profile')->orderBy($order);
                 
                 $renderParams = ['filter' => $filter];
                 break;
@@ -68,7 +68,7 @@ class IndexController extends BaseController
 
                 $userQuery->joinWith(['stats' => function($query) use ($editsTh) {
                     $query->where('editcount>:edits', [':edits' => $editsTh]);
-                }])->orderBy($order);
+                }])->with('profile')->orderBy($order);
                 
                 $renderParams = ['filter' => $filter];
                 break;
@@ -89,7 +89,7 @@ class IndexController extends BaseController
         $totalCount = $userQuery->count();
         $pages = new Pagination(['totalCount' => $totalCount]);
 	    $pages->pageSize = Yii::$app->params['pages']['userIndexPagesize'];
-        $users = $userQuery->all();
+        $users = $userQuery->offset($pages->offset)->limit($pages->limit)->all();
         
         return $this->render('index', \yii\helpers\ArrayHelper::merge([
             'users' => $users,
@@ -117,23 +117,9 @@ class IndexController extends BaseController
             ),
             'options' => ['id' => 'tabs-interval', 'class' => 'subtabs'],
         );
-        $filter = (!isset($_GET['filter'])) ? 'week' : $_GET['filter'];
-        switch ($filter) {
-            case 'all':
-                $submenu['items'][0]['options']['class'] = 'active';
-                break;
-            case 'year':
-                $submenu['items'][1]['options']['class'] = 'active';
-                break;
-            case 'quarter':
-                $submenu['items'][2]['options']['class'] = 'active';
-                break;
-            case 'month':
-                $submenu['items'][3]['options']['class'] = 'active';
-                break;
-            case 'week':
-                $submenu['items'][4]['options']['class'] = 'active';
-                break;
+        $filter = Yii::$app->request->get('filter','week');
+        if ($filter === 'week') {
+             $submenu['items'][4]['options']['class'] = 'active';
         }
         if (isset($_GET['search'])) {
             for ($i = 0; $i < 5; $i++) {
