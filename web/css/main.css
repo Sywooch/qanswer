@@ -75,12 +75,6 @@ ol {
 	margin-left: 30px;
 	margin-bottom: 1em;
 }
-.ar {
-	text-align: right !important;
-}
-.al {
-	text-align: left !important;
-}
 .space {
     padding-top: 20px;
 }
@@ -282,13 +276,6 @@ a:hover {
 	margin-left: 3px;
 }
 
-
-.reputation-score {
-	color:#444444;
-	font-size:120%;
-	font-weight:bold;
-	margin-right:2px;
-}
 .lsep {
 	color:#CCCCCC;
 	font-size:110%;
@@ -641,6 +628,9 @@ a.comment-user {
 .supernova {
 	color:#FE7A15 !important;
 }
+.question-row {
+	overflow: hidden;
+}
 .question-status {
 	background-color:#EEEEEE;
 	clear:both;
@@ -978,10 +968,6 @@ a.comment-user {
     text-align: center;
 }
 
-.user-stats-table {
-    margin-bottom: 15px;
-    margin-left: 50px;
-}
 .summary-title {
     clear: both;
 }
@@ -998,15 +984,12 @@ a.comment-user {
 .favorites-count, .favorites-count-off {
     color: #D4A849;
     float: left;
-    margin-top: 13px;
+    /*margin-top: 13px;*/
     text-align: center;
-    width: 32px;
+    /*width: 32px;*/
 }
 .favorites-count-off {
     color: #919191;
-}
-.user-stats-table .question-summary {
-    width: 800px;
 }
 
 .cp {
@@ -1016,7 +999,6 @@ a.comment-user {
 .narrow .votes {
     background: none repeat scroll 0 0 transparent;
     float: left;
-    height: 38px;
     margin: 0 3px 0 0;
     padding: 5px;
     width: 38px;
@@ -1036,7 +1018,6 @@ a.comment-user {
 
 .narrow .status {
     float: left;
-    height: 38px;
     margin: 0 3px 0 0;
     padding: 5px;
     width: 48px;
@@ -1044,7 +1025,6 @@ a.comment-user {
 
 .narrow .views {
     float: left;
-    height: 38px;
     margin: 0 7px 0 0;
     padding: 5px 0 5px 4px;
     width: 40px;
@@ -1052,18 +1032,10 @@ a.comment-user {
 .warm {
     color: #9B764F !important;
 }
-.vcard {
-    margin-top: -10px;
-    width: 960px;
-}
 .mini-counts {
     font-size: 190%;
     font-weight: bold;
     height: 25px;
-}
-
-.narrow .summary {
-    width: 550px;
 }
 
 .no-overflow {
@@ -1078,10 +1050,8 @@ a.comment-user {
     border: medium none;
     height: 225px;
     line-height: 120%;
-    margin: 10px;
     overflow: auto;
     padding: 10px;
-    width: 380px;
     word-wrap: break-word;
 }
 .supernova {
@@ -1144,9 +1114,6 @@ a.comment-user {
     background-position: 0 -330px;
 }
 
-.wide-tag-col {
-    width: 230px;
-}
 #tags-table .answer-votes {
     display: inline-block;
     float: none;
@@ -1377,9 +1344,6 @@ a.comment-user {
 }
 .started-link, .started-link:visited {
     color: #999999;
-}
-.started .reputation-score {
-    margin-left: 1px;
 }
 .reputation-score {
     color: #444444;
@@ -2115,7 +2079,6 @@ hr {
 	margin-top:5px;
 }
 .beian {width:200px;float:right;}
-.mt20 {margin-top: 20px;}
 .bottom-notice {margin-top:20px;}
 ul.top {
     list-style: none outside none;

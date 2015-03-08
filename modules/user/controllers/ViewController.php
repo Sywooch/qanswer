@@ -196,7 +196,11 @@ class ViewController extends BaseController
 
                 $tPages = new Pagination(['totalCount' => $userTagsQuery->count()]);
 			    $tPages->pageSize = Yii::$app->params['pages']['userTagsPagesize'];
-                $usertags = $userTagsQuery->all();
+                $tPages->params = ['do' => 'tags', 'uid' => $id];
+                $tPages->route = 'user/view/stats';
+                
+                $usertags = $userTagsQuery->offset($tPages->offset)->limit($tPages->limit)->all();
+                
                 //徽章
                 $awards = Award::find()->select('count(*) as badgecount,uid,badgeid')
                         ->where('uid=:uid', [':uid' => $user->id])
@@ -359,17 +363,14 @@ class ViewController extends BaseController
                 $answers = $answerQuery->orderBy($order)->offset($answerQuery->offset)->limit($answerQuery->limit)->all();
                 return $this->renderPartial('_stats-answers', array('submenu' => $submenu, 'answers' => $answers, 'pages' => $answersPages), true);
             case 'tags':
-                $order = 'totalcount DESC';
-                $criteria = new CDbCriteria(array(
-                    'condition' => 'uid=' . $uid,
-                    'order' => $order,
-                ));
-                $total = UserTags::Model()->count($criteria);
-                $tPages = new CPagination($total);
+                $userTagsQuery = UserTags::find()->where(['uid' => $uid])->orderBy(['totalcount' => SORT_DESC]);
+                
+                $tPages = new Pagination(['totalCount' => $userTagsQuery->count()]);
                 $tPages->pageSize = Yii::$app->params['pages']['userTagsPagesize'];
-                $tPages->applyLimit($criteria);
-                $usertags = UserTags::Model()->findAll($criteria);
-                echo $this->renderPartial('_stats-tags', array('usertags' => $usertags, 'pages' => $tPages), true);
+                $tPages->params = ['do' => $do, 'uid' => $uid];
+                $tPages->route = 'user/view/stats';
+                $usertags = $userTagsQuery->offset($tPages->offset)->limit($tPages->limit)->all();
+                return $this->renderPartial('_stats-tags', array('usertags' => $usertags, 'pages' => $tPages));
                 break;
         }
     }

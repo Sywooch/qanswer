@@ -75,12 +75,6 @@
 	        <tbody>
 	        	<tr>
 	        		<?php
-                    $templates = [
-                        'voters' => "_index-votes",
-                        'editors' => "_index-edits",
-                        'newusers' => "_index-newusers",
-                        'reputation' => "_index-reputations",
-                    ];
         			switch($tab) {
         				case 'voters':
 							$template = "_index-votes";

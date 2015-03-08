@@ -4,36 +4,32 @@ use yii\helpers\Url;
 use app\models\User;
 use app\components\Formatter;
 ?>
-<table class="vcard">
-    <tbody>
-        <tr>
-            <td style="vertical-align: top; width: 170px;">
-                <table>
-                    <tbody>
-                        <tr>
-                        <td id="user-avatar">
-                            <img width="128" height="128" class="logo" alt="" src="<?php echo $user->bigavatar; ?>">
-                        </td>
-                        </tr>
-                        <tr>
-                        <td class="summaryinfo">
-                            <a title="查看权限" href="<?php echo Url::to('privileges/index'); ?>"><span class="summarycount"><?php echo $user->reputation; ?></span></a>
-                            <div style="margin-top: 5px; font-weight: bold;">威望</div>
-                        </td>
-                        </tr>
-                        <tr style="height: 30px;">
-                        <td style="vertical-align: bottom;" class="summaryinfo"><?php echo $user->stats->viewcount; ?> 次查看</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td style="vertical-align: top; width: 350px;">
-                    <?php if (isset($this->me) && $user->id == $this->me->id): ?>
-                    <div style="float: right; margin-top: 19px; margin-right: 4px;">
-                    <?php echo Url::to('编辑', array('users/edit', 'id' => $user->id)); ?>
-                    </div>
-                    <?php endif; ?>
-                <h2 class="mt20">
+<div class="row">
+    <div class="col-md-3">
+        <table>
+            <tbody>
+                <tr>
+                <td id="user-avatar">
+                    <img width="128" height="128" class="logo" alt="" src="<?php echo $user->bigavatar; ?>">
+                </td>
+                </tr>
+                <tr>
+                <td class="summaryinfo">
+                    <a title="查看权限" href="<?php echo Url::to('privileges/index'); ?>"><span class="summarycount"><?php echo $user->reputation; ?></span></a>
+                    <div style="margin-top: 5px; font-weight: bold;">威望</div>
+                </td>
+                </tr>
+                <tr style="height: 30px;">
+                <td style="vertical-align: bottom;" class="summaryinfo"><?php echo $user->stats->viewcount; ?> 次查看</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-5">
+                <?php if ($user->id == \Yii::$app->user->id): ?>
+                <?php echo yii\helpers\Html::a('编辑', ['user/edit', 'id' => $user->id], ['class' => 'pull-right']); ?>
+                <?php endif; ?>
+                <h2>
                     <?php echo $user->getUsergroupName(); ?>
                     <?php
                     if ($user->status == User::STATUS_NOACTIVE) {
@@ -98,16 +94,13 @@ use app\components\Formatter;
                         </tr>
                     </tbody>
                 </table>
-            </td>
-
-            <td style="width: 390px;">
-                <div class="note" id="user-about-me">
-                    <?php echo $user->profile->aboutme; ?>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    </div>
+    <div class="col-md-4">
+        <div class="note" id="user-about-me">
+            <?php echo $user->profile->aboutme; ?>
+        </div>
+    </div>
+</div>
 <div class="subheader">
     <div id="tabs">
         <a title="统计信息" href="#" class="youarehere">统计</a>
@@ -122,38 +115,26 @@ use app\components\Formatter;
 <?= $this->render('_stats-answers', array('answers' => $answers, 'pages' => $aPages, 'submenu' => $aSubmenu)) ?>
 </div>
 
-<table class="summary-title">
-    <tbody>
-        <tr>
-        <td><div class="summarycount ar"><?php echo $user->stats->upvotecount + $user->stats->downvotecount ?></div></td>
-        <td class="summary-header"><h2><?php echo Yii::t('global', 'Votes'); ?></h2></td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="user-stats-table">
-    <table>
-        <tbody>
-            <tr>
-            <td style="width: 80px;">
-                <div class="vote">
-                    <span class="vote-up-on"><?php echo Yii::t('global', 'vote up'); ?></span>
-                    <span title="赞成票总数" class="vote-count-post"><?php echo $user->stats->upvotecount; ?></span>
-                    <span style="cursor: default;" class="vote-down-off"></span>
-                </div>
-            </td>
-            <td style="width: 80px;">
-                <div class="vote">
-                    <span style="cursor: default;" class="vote-up-off"><?php echo Yii::t('global', 'vote down'); ?></span>
-                    <span title="反对票总数" class="vote-count-post"><?php echo $user->stats->downvotecount ?></span>
-                    <span class="vote-down-on"></span>
-                </div>
-            </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="summary-header text-center"><span class="summarycount"><?php echo $user->stats->upvotecount + $user->stats->downvotecount ?></span>&nbsp;<?php echo Yii::t('global', 'Votes'); ?></h2></td>
+    </div>
+    <div class="col-md-6">
+        <div class="vote">
+            <span class="vote-up-on"><?php echo Yii::t('global', 'vote up'); ?></span>
+            <span title="赞成票总数" class="vote-count-post"><?php echo $user->stats->upvotecount; ?></span>
+            <span style="cursor: default;" class="vote-down-off"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="vote">
+            <span style="cursor: default;" class="vote-up-off"><?php echo Yii::t('global', 'vote down'); ?></span>
+            <span title="反对票总数" class="vote-count-post"><?php echo $user->stats->downvotecount ?></span>
+            <span class="vote-down-on"></span>
+        </div>
+    </div>
 </div>
-
+    
 <table id="tags-title" class="summary-title">
     <tbody>
         <tr>

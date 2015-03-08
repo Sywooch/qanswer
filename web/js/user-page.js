@@ -308,9 +308,14 @@ function loadAnswers(page, sort) {
 function loadQuestions(page, sort, href) {
     loadUrl(href, "#questions-table", page, sort)
 }
-function loadTags(page) {
-    $.get(iAsk.options.links.userStat + "/?do=tags&pagesize=" + tagsPageSize + "&uid=" + uid + "&page=" + page, function (data) {
-        $("#tags-table").html(data)
+//function loadTags(page) {
+//    $.get(iAsk.options.links.userStat + "/?do=tags&pagesize=" + tagsPageSize + "&uid=" + uid + "&page=" + page, function (data) {
+//        $("#tags-table").html(data);
+//    })
+//}
+function loadTags(href) {
+    $.get(href, function (data) {
+        $("#tags-table").html(data);
     })
 }
 function loadFavorites(page, sort, href) {
@@ -455,11 +460,12 @@ $(function () {
     $(document).on("click", "#tags-pager a", function (event) {
         event.preventDefault();
         var c = RegExp(/page=([^&]+).*/).exec(this.href);
-        if (c) {
-            loadTags(c[1]);
-        } else {
-            loadTags(1);
-        }
+        loadTags(this.href);
+//        if (c) {
+//            loadTags(c[1]);
+//        } else {
+//            loadTags(1);
+//        }
         $.scrollTo($("#tags-title"), 400);
         return false;
     });

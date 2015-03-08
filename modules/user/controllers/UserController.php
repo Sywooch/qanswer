@@ -49,6 +49,63 @@ class UserController extends BaseController
         Yii::$app->user->logout();
         $this->redirect(Yii::$app->homeUrl);
     }    
+   
+     /**
+     * 编辑用户资料
+     */
+    public function actionEdit()
+    {
+        $this->title = "更新用户资料";
+        $id = intval(Yii::$app->request->get('id'));
+        if ($id != Yii::$app->user->id) {
+            throw new HttpException(404, 'The requested page does not exist.');
+        }
+
+        if ($id) {
+            $profile = UserProfile::findOne($id);
+            $user = User::findOne($id);
+        }
+        if ($profile === null)
+            throw new HttpException(404, 'The requested page does not exist.');
+
+        // ajax validator
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-edit-form') {
+            echo ActiveForm::validate(array($profile));
+            Yii::$app->end();
+        }
+
+        $post = Yii::$app->request->post();
+        if (isset($post)) {
+            $user->load($post, 'User');
+            $profile->load($post, 'UserProfile');
+//			$user->attributes = $_POST['User'];
+//			$profile->attributes = $_POST['UserProfile'];
+            if ($user->validate() && $profile->validate()) {
+                $user->save();
+                $complete1 = $complete2 = true;
+                foreach ($_POST['UserProfile'] as $p) {
+                    if (empty($p)) {
+                        $complete1 = false;
+                        break;
+                    }
+                }
+                foreach ($_POST['User'] as $p) {
+                    if (empty($p)) {
+                        $complete2 = false;
+                        break;
+                    }
+                }
+                $complete = ($complete1 & $complete2) ? 1 : 0;
+                $profile->complete = $complete;
+                if ($profile->save()) {
+                    $user = User::Model()->findByPk($_GET['id']);
+                    Yii::$app->user->setName($user->username);
+                    $this->redirect(array('users/view', 'id' => $profile->id));
+                }
+            }
+        }
+        return $this->render('edit', array('profile' => $profile, 'user' => $user));
+    }
     
     public function actionSavepreference()
     {

@@ -10,19 +10,9 @@ iAsk.init = (function() {
 			}
 		})
 	};
-//	if (!a.site.globalAuthDisabled) {
-//		if (!a.site.isChildMeta && a.user.isAnonymous) {
-//			gauth.checkStackAuth(a.stackAuthUrl)
-//		}
-//		gauth.informStackAuth(a.stackAuthUrl)
-//	}
 	return function(initParam){
 		iAsk.options = initParam;
 		$(function() {
-//			if (typeof window.isMobile != "undefined") {
-//				a.isMobile = window.isMobile
-//			}
-//			genuwine.init(a.user.guid || null, a.user.inboxUnviewedCount);
 			if (initParam.user.messages) {
 				iAsk.notify.showMessages(initParam.user.messages)
 			}			

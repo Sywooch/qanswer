@@ -6,6 +6,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use app\models\Notify;
 use app\modules\user\Module;
 
 /**
@@ -224,10 +225,10 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-//        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
 
-        $passwordmd5 = md5($password);
-        return ($this->password === md5($passwordmd5 . $this->salt));
+//        $passwordmd5 = md5($password);
+//        return ($this->password === md5($passwordmd5 . $this->salt));
     }
 
     public function isActive()

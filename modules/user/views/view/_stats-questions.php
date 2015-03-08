@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use app\components\Formatter;
 ?>
 <a name="questions"></a>
-<table class="summary-title" style="margin-left: -50px; width: 100%">
+<table class="summary-title">
     <tr>
         <td>
             <span class="summarycount ar"><?= $pages->totalCount; ?></span>
