@@ -43,16 +43,16 @@ class IndexController extends BaseController
         switch ($tab) {
             case 'newusers':
                 $sort = Yii::$app->request->get('sort', 'reputation');
-                $submenu = $this->_getNewusersSubmenu();
-                $order = $this->_getOrder($tab, $sort);
+                $submenu = $this->getNewusersSubmenu();
+                $order = $this->getOrder($tab, $sort);
                 $registertime = time() - 30 * 86400;
 
                 $userQuery->where('registertime>:time', [':time' => $registertime])->joinWith('stats')->with('profile')->orderBy($order);
                 break;
             case 'voters':
                 $filter = Yii::$app->request->get('filter', 'week');
-                $submenu = $this->_getSubmenu($tab);
-                $order = $this->_getOrder($tab, $filter);
+                $submenu = $this->getSubmenu($tab);
+                $order = $this->getOrder($tab, $filter);
                 
                 $userQuery->joinWith(['stats' => function($query) use ($votesTh) {
                     $query->where('upvotecount>:votes', [':votes' => $votesTh]);
@@ -63,8 +63,8 @@ class IndexController extends BaseController
 
             case 'editors':
                 $filter = Yii::$app->request->get('filter', 'week');
-                $submenu = $this->_getSubmenu($tab);
-                $order = $this->_getOrder($tab, $filter);
+                $submenu = $this->getSubmenu($tab);
+                $order = $this->getOrder($tab, $filter);
 
                 $userQuery->joinWith(['stats' => function($query) use ($editsTh) {
                     $query->where('editcount>:edits', [':edits' => $editsTh]);
@@ -76,14 +76,14 @@ class IndexController extends BaseController
             default:
                 $filter = Yii::$app->request->get('filter', 'week');
                 $menu['items'][0]['options']['class'] = 'active';
-                $submenu = $this->_getSubmenu($tab);
-                $order = $this->_getOrder($tab, $filter);
+                $submenu = $this->getSubmenu($tab);
+                $order = $this->getOrder($tab, $filter);
                 $userQuery->where('reputation>:reputation', [':reputation' => $repsTh]);
                 $userQuery->joinWith('stats')->with('profile')->orderBy($order);
                 $renderParams = ['filter' => $filter];
                 break;
         }
-        $this->title = "用户";
+        $this->title = "用户列表";
         
         $userQuery->andFilterWhere(['like','username',Yii::$app->request->get('search')]);
         $totalCount = $userQuery->count();
@@ -99,8 +99,8 @@ class IndexController extends BaseController
             'tab' => $tab
         ],['params' => $renderParams]));
     }
-    
-    private function _getSubmenu($tab)
+       
+    private function getSubmenu($tab)
     {
         $week = DateFormatter::weekFirstDay();
         $month = DateFormatter::monthFirstDay();
@@ -129,7 +129,7 @@ class IndexController extends BaseController
         return $submenu;
     }    
 
-    private function _getOrder($tab, $filter)
+    private function getOrder($tab, $filter)
     {
         $orders = array(
             'voters' => array(
@@ -161,7 +161,7 @@ class IndexController extends BaseController
         return $orders[$tab][$filter];
     }
     
-    private function _getNewusersSubmenu()
+    private function getNewusersSubmenu()
     {
         $submenu = array(
             'items' => array(
@@ -177,14 +177,8 @@ class IndexController extends BaseController
             }
         }
         $sort = Yii::$app->request->get('sort', 'reputation');
-        switch ($sort) {
-            case 'registertime' :
-                $submenu['items'][0]['options']['class'] = 'active';
-                break;
-            case 'reputation' :
-            default:
-                $submenu['items'][1]['options']['class'] = 'active';
-                break;
+        if ($sort === 'reputation') {
+            $submenu['items'][1]['options']['class'] = 'active';
         }
         return $submenu;
     }    

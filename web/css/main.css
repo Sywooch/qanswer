@@ -868,6 +868,10 @@ a.comment-user {
     padding: 2px 4px 4px;
     text-decoration: none;
 }
+.subtabs li a {
+	color: #999999;
+	text-decoration: none;
+}
 
 .subtabs li.active {
     background-color: #808185;

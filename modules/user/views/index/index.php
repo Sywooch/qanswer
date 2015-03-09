@@ -1,6 +1,3 @@
-<style type="text/css">
-
-</style>
 <?php $this->title = $this->context->title;?>
 <div id="mainbar-full">
     <div class="subheader">
@@ -8,10 +5,7 @@
 		<?= \yii\widgets\Menu::widget($menu); ?>
     </div>
     <div class="row row-space-4">
-        <div class="col-md-6">
-            查找:<input type="text" style="margin-left: 10px;" value="" class="userfilter" name="userfilter" id="userfilter">
-        </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <?= \yii\widgets\Menu::widget($submenu); ?>
         </div>
     </div>
@@ -26,5 +20,4 @@
         </div>
 		<?= yii\widgets\LinkPager::widget(['pagination' => $pages, 'options' => ['class' => 'pagination']]);?>
 	</div>
-
 </div>

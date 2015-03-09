@@ -120,71 +120,7 @@ class UsersController extends BaseController
 
    
 
-    public function actionFilter()
-    {
-        $tab = Yii::$app->request->get('tab', 'reputation');
-
-        $votesTh = Yii::$app->params['pages']['userIndexVoters'];
-        $editsTh = Yii::$app->params['pages']['userIndexEditors'];
-        $repsTh = Yii::$app->params['pages']['userIndexReps'];
-        $userQuery = User::find();
-        switch ($tab) {
-            case 'newusers':
-                $sort = Yii::$app->request->get('sort', 'reputation');
-                $submenu = $this->_getNewusersSubmenu();
-                $order = $this->_getOrder($tab, $sort);
-
-                $registertime = time() - 30 * 86400;
-                $userQuery->where('registertime>:time', [':time' => $registertime])->joinWith('stats')->orderBy($order);
-                break;
-
-            case 'voters':
-                $filter = Yii::$app->request->get('filter', 'week');
-                $submenu = $this->_getSubmenu($tab);
-                $order = $this->_getOrder($tab, $filter);
-
-                $userQuery->joinWith(['stats' => function($query) use ($votesTh) {
-                    $query->where('upvotecount>:votes', [':votes' => $votesTh]);
-                }])->orderBy($order);
-                break;
-            case 'editors':
-                $filter = Yii::$app->request->get('filter', 'week');
-                $submenu = $this->_getSubmenu($tab);
-                $order = $this->_getOrder($tab, $filter);
-
-                $userQuery->joinWith(['stats' => function($query) use ($editsTh) {
-                    $query->where('editcount>:edits', [':edits' => $editsTh]);
-                }])->orderBy($order);
-                break;
-            case 'reputation':
-            default:
-                $filter = Yii::$app->request->get('filter', 'week');
-                $submenu = $this->_getSubmenu($tab);
-                $order = $this->_getOrder($tab, $filter);
-                $userQuery->where('reputation>:reputation', [':reputation' => $repsTh]);
-                $userQuery->joinWith('stats')->with('profile')->orderBy($order);
-                break;
-        }
-        
-        //@todo 待完善策略
-//        if (Yii::$app->request->get('show') && Yii::$app->request->get('search')) {
-//            $userQuery->andWhere('username=:q',[':q' => Yii::$app->request->get('search')]);
-//        } else {
-//            $userQuery->andFilterWhere(['like','username',Yii::$app->request->get('search')]);
-//        }
-        $userQuery->andFilterWhere(['like','username',Yii::$app->request->get('search')]);
-
-        $totalCount = $userQuery->count();
-        $pages = new Pagination(['totalCount' => $totalCount]);
-        $pages->pageSize = Yii::$app->params['pages']['userIndexPagesize'];
-        $pages->route = 'users/index';
-        $users = $userQuery->all();
-        echo $this->renderPartial('_filter', [
-            'submenu' => $submenu, 
-            'users' => $users, 
-            'pages' => $pages
-        ]);
-    }
+  
 
     public function actionAvatar()
     {
