@@ -99,15 +99,20 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'register' => ['email', 'password'],
-            'update'   => ['email', 'password'],
+            'update'   => ['username', 'email', 'password'],
         ];
     }    
     /** @inheritdoc */
     public function rules()
     {
         return [
+            ['username', 'required', 'on' => ['update']],
+//            ['username', 'match', 'pattern' => '/^[a-zA-Z]\w+$/'],
+            ['username', 'string', 'min' => 3, 'max' => 25],
+            ['username', 'unique'],
+            ['username', 'trim'],
             // email rules
-            ['email', 'required', 'on' => ['register', 'update']],
+            ['email', 'required', 'on' => ['register']],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],

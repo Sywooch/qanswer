@@ -3,16 +3,26 @@
 namespace app\modules\user\controllers;
 
 use Yii;
+use yii\web\HttpException;
 use app\components\BaseController;
 use app\components\Formatter;
 use app\modules\user\models\LoginForm;
 use app\modules\user\models\RegisterForm;
 use app\modules\user\Module;
+use app\modules\user\models\User;
+use app\modules\user\models\UserProfile;
 
 class UserController extends BaseController
 {
     public $layout = '//column1';
     
+    /**
+     *
+     * @var User $model
+     */
+    private $model = null;
+
+
     public function actionLogin()
     {
         if (Yii::$app->user->isGuest) {
@@ -53,58 +63,23 @@ class UserController extends BaseController
      /**
      * 编辑用户资料
      */
-    public function actionEdit()
+    public function actionEdit($id)
     {
         $this->title = "更新用户资料";
-        $id = intval(Yii::$app->request->get('id'));
-        if ($id != Yii::$app->user->id) {
-            throw new HttpException(404, 'The requested page does not exist.');
-        }
 
-        if ($id) {
-            $profile = UserProfile::findOne($id);
-            $user = User::findOne($id);
-        }
-        if ($profile === null)
-            throw new HttpException(404, 'The requested page does not exist.');
-
-        // ajax validator
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-edit-form') {
-            echo ActiveForm::validate(array($profile));
-            Yii::$app->end();
-        }
+        $user = $this->loadModel($id);
+        $user->scenario = 'update';
+        $profile = UserProfile::findOne($id);
 
         $post = Yii::$app->request->post();
-        if (isset($post)) {
-            $user->load($post, 'User');
-            $profile->load($post, 'UserProfile');
-//			$user->attributes = $_POST['User'];
-//			$profile->attributes = $_POST['UserProfile'];
-            if ($user->validate() && $profile->validate()) {
-                $user->save();
-                $complete1 = $complete2 = true;
-                foreach ($_POST['UserProfile'] as $p) {
-                    if (empty($p)) {
-                        $complete1 = false;
-                        break;
-                    }
-                }
-                foreach ($_POST['User'] as $p) {
-                    if (empty($p)) {
-                        $complete2 = false;
-                        break;
-                    }
-                }
-                $complete = ($complete1 & $complete2) ? 1 : 0;
-                $profile->complete = $complete;
-                if ($profile->save()) {
-                    $user = User::Model()->findByPk($_GET['id']);
-                    Yii::$app->user->setName($user->username);
-                    $this->redirect(array('users/view', 'id' => $profile->id));
-                }
-            }
-        }
-        return $this->render('edit', array('profile' => $profile, 'user' => $user));
+        if ($user->load($post) && $profile->load($post) && $user->save() && $profile->save()) {
+            \Yii::$app->getSession()->setFlash('success', \app\modules\user\Module::t('user', 'User has been updated'));
+            return $this->refresh();
+        }     
+        return $this->render('edit', [
+            'profile' => $profile, 
+            'user' => $user
+        ]);
     }
     
     public function actionSavepreference()
@@ -142,4 +117,23 @@ class UserController extends BaseController
             \Yii::$app->end();
         }
     }
+    
+    /**
+     * Finds the User model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param  integer               $id
+     * @return User                  the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function loadModel($id)
+    {
+        if ($this->model === null) {
+            $this->model = User::findOne($id);
+            if ($this->model === null) {
+                throw new NotFoundHttpException('The requested page does not exist');
+            }
+        }
+        
+        return $this->model;
+    }    
 }

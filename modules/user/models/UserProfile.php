@@ -34,9 +34,9 @@ class UserProfile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-//            [['realname', 'birthday', 'location', 'aboutme', 'complete', 'preference', 'unpreference'], 'required'],
+            [['realname', 'birthday', 'location', 'aboutme', 'complete'], 'required'],
             [['birthday'], 'safe'],
-            [['aboutme', 'preference', 'unpreference'], 'string'],
+            [['aboutme'], 'string'],
             [['complete'], 'integer'],
             [['realname'], 'string', 'max' => 20],
             [['location'], 'string', 'max' => 250],

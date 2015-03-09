@@ -119,7 +119,7 @@ AppAsset::register($this);
                     </div>
                     <div id="copy">
                     &copy; <?php echo date('Y'); ?> 乐问&nbsp;&nbsp;
-                        本站内容采用&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/cn/" rel="license"><img src="http://i.creativecommons.org/l/by-sa/2.5/cn/80x15.png" class="cc-icon" alt="知识共享许可协议"> <strong>知识共享署名-相同方式共享 2.5 中国大陆许可协议</strong></a>
+                        本站内容采用&nbsp;<a href="http://creativecommons.org/licenses/by-sa/2.5/cn/" rel="license"><strong>知识共享署名-相同方式共享 2.5 中国大陆许可协议</strong></a>
                      &nbsp;&nbsp;<?php // echo $this->options['miibeian'];?>
                     </div>
                     <span class="right"><?php // echo Yii::$app->params['version']['release'];?></span>
