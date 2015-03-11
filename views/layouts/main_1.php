@@ -42,7 +42,7 @@ AppAsset::register($this);
 			'unprotect' 		: '<?php echo Url::to('/post/unprotect');?>',
 			'lock'				: '<?php echo Url::to('/post/lock');?>',
 			'unlock' 			: '<?php echo Url::to('/post/unlock');?>',
-			'popup'				: '<?php echo Url::to('/post/popup');?>',
+			'popup'				: '<?php echo Url::to(['/question/post/popup']);?>',
 			'commenthelp'		: '<?php echo Url::to('/post/commenthelp');?>',
 			'login'		 		: '<?php echo Url::to('/users/login');?>',
 			'validateduplicate'	: '<?php echo Url::to('/post/validateduplicate');?>',
@@ -57,7 +57,6 @@ AppAsset::register($this);
 			'revisionsView'		: '<?php echo Url::to('/revisions/view');?>',
 			'profilelink'		: '<?php echo Url::to('/users/profilelink');?>',
 			'subscriber'		: '<?php echo Url::to('/tags/subscriber');?>',
-			'vote'				: '<?php echo Url::to('/post/vote');?>',
 			'messageMark'		: '<?php echo Url::to('/messages/markread');?>',
 			'postComments'		: '<?php echo Url::to('/post/comments');?>'
 		},

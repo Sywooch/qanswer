@@ -23,6 +23,7 @@ class Vote extends ActiveRecord
         "spam" => 12
     );
 
+    const VOTE_TYPE_FAVORITE = 5;
     /**
      * 赞成 1
      * @var 有用

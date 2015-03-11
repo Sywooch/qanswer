@@ -1308,9 +1308,11 @@ var vote = function() {
 				formData[name] = optionalFormData[name]
 			}
 		}
+        alert(jClicked.attr('href'));
 		$.ajax( {
 			type : "POST",
 			url : iAsk.options.links.vote+"?postid=" + postId + "&type=" + voteTypeId,
+			url : jClicked.attr('href'),
 			data : formData,
 			dataType : "json",
 			success : function(data) {
@@ -1695,10 +1697,9 @@ var vote = function() {
 	/* endflag */
 	
 	var favorite_init = function() {
-//		$(".star-off:not(.disabled)").live("click", function(evt) {
-		$(document).on("click",".star-off:not(.disabled)", function(evt) {
+		$(document).on("click",".star-off:not(.disabled)", function(event) {
 			favorite($(this));
-			evt.preventDefault()
+			event.preventDefault();
 		})
 	};
 

@@ -133,13 +133,8 @@ div.view
 	color: #508850 !important;
 }
 
-.dno {
-    display: none;
-}
 #header {
-	height:120px;
-	margin:0pt auto;
-	width:960px;
+	height:90px;
 }
 #custom-header {
 	background-color:#EEEEEE;
@@ -1453,13 +1448,6 @@ a.comment-user {
 .supernovabg {
     background-color: #FE7A15 !important;
     color: #FFFFFF !important;
-}
-
-.title a {
-    color: #467C9E;
-    text-decoration: none;
-    text-shadow: 1px 1px 1px #AAAAAA;
-	font-family: "Microsoft YaHei";
 }
 
 #interestingTags .delete-tag,

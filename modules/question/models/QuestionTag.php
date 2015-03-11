@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\modules\question\models;
 
 use yii\db\ActiveRecord;
 
@@ -24,16 +24,9 @@ class QuestionTag extends ActiveRecord
         );
     }
 
-    public function relations()
-    {
-        return array(
-            'question' => array(self::BELONGS_TO, 'Post', 'postid'),
-        );
-    }
-
     public function getQuestion()
     {
-        return $this->hasOne(Post::className(), ['id' => 'postid']);
+        return $this->hasOne(Question::className(), ['id' => 'postid']);
     }
 
     public function getTags($projectId)

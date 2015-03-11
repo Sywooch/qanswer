@@ -8,8 +8,6 @@ use app\components\String;
 use app\models\Post;
 use app\models\UserStat;
 use app\models\Bounty;
-use app\models\QuestionTag;
-//use app\models\Revision;
 
 
 class Question extends Post

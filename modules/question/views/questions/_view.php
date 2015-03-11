@@ -10,7 +10,7 @@ use app\components\Formatter;
             <span style="font-size: 200%;" class="vote-count-post"><?php echo $data->score;?></span>
             <a title="<?php echo Yii::t('global','vote down');?>" class="vote-down-off<?php if ($data->hasVote!=NULL && $data->hasVote==Vote::DOWNVOTE) echo " vote-down-on";?>"><?php echo Yii::t('global','vote down');?></a>
 
-            <a title="收藏 (取消收藏)" href="#" class="star-off <?php if ($data->hasFav!=NULL && $data->hasFav==Vote::FAV) echo "star-on";?>">收藏</a>
+            <?= Html::a('收藏', ['/question/post/vote','postid' => $data->id, 'type' => Vote::VOTE_TYPE_FAVORITE],['class' => "star-off ".(($data->hasFav!=NULL && $data->hasFav==Vote::FAV) ? "star-on" : ""),'title' => '收藏 (取消收藏)']); ?>
             <div class="favoritecount"><b><?php echo $data->favcount;?></b></div>
         </div>
     </div>

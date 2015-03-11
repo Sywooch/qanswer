@@ -4,7 +4,7 @@ namespace app\modules\question\controllers;
 use app\components\BaseController;
 use Yii;
 use app\models\Tag;
-use app\models\QuestionTag;
+use app\modules\question\models\QuestionTag;
 use app\models\Post;
 use app\models\Revision;
 use yii\data\Pagination;
