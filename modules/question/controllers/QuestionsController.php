@@ -3,6 +3,8 @@
 namespace app\modules\question\controllers;
 use app\components\BaseController;
 use app\models\Post;
+use app\modules\question\models\Question;
+use app\modules\question\models\Answer;
 use app\models\PostState;
 use app\models\Draft;
 use app\models\Tag;
@@ -11,7 +13,6 @@ use app\models\Activity;
 use app\models\UserTags;
 use app\models\MailQueue;
 use app\models\Inbox;
-use app\models\Revision;
 use app\models\Bounty;
 use app\components\String;
 use yii\data\Pagination;
@@ -23,30 +24,6 @@ class QuestionsController extends BaseController
     public $layout = '//column1';
     public $hasOpenBounty = false;
     private $model;
-
-    public function filters()
-    {
-        return array(
-            'accessControl', // perform access control for CRUD operations
-        );
-    }
-
-    public function accessRules()
-    {
-        return array(
-            array('allow', // allow all users to access 'index' and 'view' actions.
-                'actions' => array('index', 'view', 'tagged'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated users to access all actions
-                'actions' => array('ask', 'suggestTags'),
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
-    }
 
     /**
      * 显示单个问题
@@ -63,7 +40,6 @@ class QuestionsController extends BaseController
                 throw new \yii\web\NotFoundHttpException(404, '请求页面不存在.');
             }
         }
-        $this->title = $question->title;
         $relatedQuestions = $question->getRelatedQuestions();
         $answer = $this->newAnswer($question);
 
@@ -76,31 +52,11 @@ class QuestionsController extends BaseController
 
         $tab = Yii::$app->request->get('tab', 'activity');
 
-        $query = Post::find()->where('post.idv=:idv AND post.idtype=:idtype', [':idv' => $question->id, ':idtype' => Post::IDTYPE_A]);
-        switch ($tab) {
-            case 'votes':
-                $query->orderBy(['post.accepted' => SORT_DESC, 'post.score' => SORT_DESC]);
-                break;
-            case 'oldest':
-                $query->orderBy(['post.accepted' => SORT_DESC, 'post.createtime' => SORT_DESC]);
-                break;
-            case 'activity':
-            default:
-                $query->orderBy(['post.accepted' => SORT_DESC, 'post.activity' => SORT_DESC]);
-                break;
-        }
-
-        if (!Yii::$app->user->isGuest) {
-            $query->select(["post.*", "vote.useful as hasVote", "vote.fav as hasFav"])
-                  ->leftJoin('vote', 'vote.postid=post.id AND vote.uid=:uid', [':uid' => Yii::$app->user->getId()]);
-        }
-
         $pages = new Pagination(['totalCount' => $question->answercount]);
         $pages->pageSize = Yii::$app->params['pages']['answer'];
-        $answers = $query->with('author')->all();
+        $answers = $question->getAnswers($tab, $pages->offset,$pages->limit);
         $tags = Tag::findAll(['name' => explode(' ', $question->tags)]);
 
-        $this->pageDescription = $question->excerpt;
         return $this->render('view', [
             'model' => $question,
             'answer' => $answer,
@@ -108,7 +64,6 @@ class QuestionsController extends BaseController
             'tags' => $tags,
             'pages' => $pages,
             'relatedQuestions' => $relatedQuestions,
-            'viewcount' => $question->viewcount,
             'tab' => $tab,
         ]);
     }
@@ -122,28 +77,28 @@ class QuestionsController extends BaseController
             return $this->render('/common/message', array('data' => array('title' => Yii::t('users', 'Account Inactive'), 'message' => Yii::t('users', 'Please active your account'))));
         }
 
-        $model = new Post();
+        $model = new Question();
         $model->setScenario('qask');
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->idtype = Post::IDTYPE_Q;
+//            $model->idtype = Post::IDTYPE_Q;
 
             $orginContent = $model->content;
             $model->content = String::markdownToHtml($orginContent);
             $model->excerpt = String::filterTitle($orginContent, 200);
             if ($model->save()) {
-                $revision = new Revision;
-                $revision->postid = $model->id;
-                $revision->revtime = $model->createtime;
-                $revision->text = $orginContent;
-                $revision->title = $model->title;
-                $revision->uid = $model->uid;
-                $revision->status = Revision::STATUS_OK;
-                $revision->comment = "第一个版本";
-                $revision->save();
-
-                $model->revisionid = $revision->id;
-                $model->update(array('revisionid'));
+//                $revision = new Revision;
+//                $revision->postid = $model->id;
+//                $revision->revtime = $model->createtime;
+//                $revision->text = $orginContent;
+//                $revision->title = $model->title;
+//                $revision->uid = $model->uid;
+//                $revision->status = Revision::STATUS_OK;
+//                $revision->comment = "第一个版本";
+//                $revision->save();
+//
+//                $model->revisionid = $revision->id;
+//                $model->update(array('revisionid'));
 
                 $postState = new PostState();
                 $postState->id = $model->id;
@@ -338,7 +293,7 @@ class QuestionsController extends BaseController
         if ($this->model === null) {
             if (Yii::$app->request->get('id')) {
 
-                $query = Post::find();
+                $query = Question::find();
                 if (!Yii::$app->user->isGuest) {
                     $query->select(['post.*', 'vote.useful as hasVote', 'vote.fav as hasFav']);
                     $query->leftJoin('vote', 'vote.postid=post.id AND vote.uid=:uid', [':uid' => Yii::$app->user->getId()]);
@@ -362,7 +317,7 @@ class QuestionsController extends BaseController
         return $this->model;
     }
 
-    protected function newAnswer($post)
+    protected function newAnswer($question)
     {
         //检查问题是否删除/关闭/锁定
         //检查问题是否问答受限
@@ -372,66 +327,60 @@ class QuestionsController extends BaseController
         if (Yii::$app->user->isGuest || !$this->me->isActive()) {
             $allowAnswer = false;
         }
-        if ($post->poststate->isDelete() || $post->poststate->isClose() || $post->poststate->isLock()) {
+        if ($question->poststate->isDelete() || $question->poststate->isClose() || $question->poststate->isLock()) {
             $allowAnswer = false;
         }
-        if ($post->poststate->isProtect() && !Yii::$app->user->isGuest && !$this->me->checkPerm('newUser')) {
+        if ($question->poststate->isProtect() && !Yii::$app->user->isGuest && !$this->me->checkPerm('newUser')) {
             $allowAnswer = false;
         }
 
         if ($allowAnswer) {
-            $answer = new Post();
-            $answer->scenario = 'answer';
+            $answer = new Answer();
 
-            if (isset($_POST['ajax']) && $_POST['ajax'] === 'comment-form') {
-                echo CActiveForm::validate($answer);
-                Yii::$app->end();
-            }
-            if (isset($_POST['Post'])) {
-                if ($post->checkExistAnswer($uid)) {
+            if ($answer->load(Yii::$app->request->post())) {
+                if ($question->checkExistAnswer($uid)) {
                     return NULL;
                 }
-                $answer->load(Yii::$app->request->post());
 
-                if ($post->addAnswer($answer)) {
+                if ($question->addAnswer($answer)) {
                     $activity = new Activity;
                     $activity->type = 'answer';
                     $activity->typeid = $answer->id;
                     $activity->uid = $uid;
                     $activity->data = array(
-                        'qid' => $post->id,
-                        'qtitle' => $post->title
+                        'qid' => $question->id,
+                        'qtitle' => $question->title
                     );
                     $activity->save();
 
-                    UserTags::ProcessTags($post);
+                    UserTags::ProcessTags($question);
 
                     $currentUser = Yii::$app->user->identity;
                     $currentUser->updateLastActivity();
 
                     //Clear draft
-                    Draft::deleteAll('uid=:uid AND type=:type AND postid=:postid', [':uid' => $uid, ':type' => Draft::TYPE_ANSER, ':postid' => $post->id]);
+                    Draft::deleteAll('uid=:uid AND type=:type AND postid=:postid', [':uid' => $uid, ':type' => Draft::TYPE_ANSER, ':postid' => $question->id]);
 
                     //通知
                     $inbox = new Inbox;
-                    $inbox->title = $post->title;
-                    $inbox->url = $post->getUrl() . "#" . $answer->id; // $this->createUrl('questions/view',array('id'=>$post->id,'#'=>$answer->id));
+                    $inbox->title = $question->title;
+                    $inbox->url = $question->getUrl() . "#" . $answer->id; // $this->createUrl('questions/view',array('id'=>$question->id,'#'=>$answer->id));
                     $inbox->summary = String::filterTitle($_POST['Post']['content'], 100);
                     $inbox->type = Inbox::$TYPE['answer'];
-                    $inbox->uid = $post->uid;
+                    $inbox->uid = $question->uid;
                     $inbox->save();
 
                     //邮件
-                    $author = $post->author;
+                    $author = $question->author;
                     if (!empty($author->email) && $author->notify['question_answered']) {
                         $data = array(
                             'user' => $author,
-                            'url' => $post->getAbsoluteUrl() . "#" . $answer->id,
-                            'title' => $post->title,
+                            'url' => $question->getAbsoluteUrl() . "#" . $answer->id,
+                            'title' => $question->title,
                             'email' => $author->email
                         );
                         $body = $this->render('/email/new_answer', ['data' => $data]);
-                        $subject = "您的问题有新的答案：" . $post->title;
+                        $subject = "您的问题有新的答案：" . $question->title;
                         MailQueue::addQueue($author->email, $subject, $body);
                     }
 
@@ -440,7 +389,7 @@ class QuestionsController extends BaseController
                     $this->refresh();
                 }
             }
-            $draft = Draft::findOne("uid=:uid AND type=:type AND postid=:postid", array(":uid" => $uid, ":type" => Draft::TYPE_ANSER, ":postid" => $post->id));
+            $draft = Draft::findOne("uid=:uid AND type=:type AND postid=:postid", array(":uid" => $uid, ":type" => Draft::TYPE_ANSER, ":postid" => $question->id));
             if ($draft != null) {
                 $answer->content = $draft->content;
             }

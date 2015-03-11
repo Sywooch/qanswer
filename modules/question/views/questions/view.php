@@ -22,16 +22,7 @@ $(function(){
  </script>
 <div id="question-header">
     <h1 class="title">
-        <?php
-        $title = Html::encode($model->title);
-        if ($model->poststate->isClose()) {
-            $title .= "&nbsp;[关闭]";
-        }
-        if ($model->poststate->isDelete()) {
-            $title .= "&nbsp;[删除]";
-        }
-        echo Html::a($title, $model->url, array('class' => "question-hypera"));
-        ?>
+        <?= Html::a($model->formattedTitle, $model->url, array('class' => "question-hypera"));?>
     </h1>
 </div>
 <div class="row">
@@ -141,12 +132,14 @@ $(function(){
                     </div>
                 <?php endif; ?>
                 <script type="text/javascript">
+                    /*
                     $(function() {
                         editormd("editor-textarea", {
                             path : '<?= Yii::$app->assetManager->getPublishedUrl("@bower/editor.md"); ?>/lib/', // codemirror、marked等依赖的库的路径
                             height: 300
                         });
                     });
+                    */
                 </script>
             </div>
     <?php endif; ?>

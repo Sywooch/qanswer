@@ -21,7 +21,7 @@ use Yii;
 class PostController extends BaseController
 {
 
-    public $layout = '//column2';
+    public $layout = '//column1';
     private $voteTypeIds = array(
         "informModerator" => -1,
         "undoMod" => 0,
@@ -39,30 +39,6 @@ class PostController extends BaseController
     );
     private $_model;
 
-    public function filters()
-    {
-        return array(
-            'accessControl', // perform access control for CRUD operations
-        );
-    }
-
-    public function accessRules()
-    {
-        return array(
-            array('allow',
-                'actions' => array('index', 'view', 'revisions'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated users to access all actions
-                'actions' => array('vote', 'comments', 'popup', 'edit', 'protect', 'unprotect', 'commenthelp', 'Validateduplicate', 'bountystart', 'lock', 'unlock', 'heartbeat'),
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
-    }
-
     public function actionEdit()
     {
         if (!$this->me->isActive()) {
@@ -77,91 +53,40 @@ class PostController extends BaseController
         }
         if ($model->isAnswer()) {
             $model->setScenario('answer');
-            $this->title = "编辑答案";
         } elseif ($model->isQuestion()) {
             $model->setScenario('qask');
-            $this->title = "编辑问题";
         }
 
         $allowEdit = $this->me->checkPerm('edit') || $this->me->isAdmin() || $this->me->isMod() || $model->isSelf() || ($model->isWiki() && $this->me->checkPerm('editCommunityWiki'));
 
-        if (isset($_POST['Post'])) {
-            //如果权限不够，则revision处于等待审核状态
-            $oldtext = $model->lastrevision->text;
+        if ($allowEdit && $model->load(Yii::$app->request->post())) {
 
-            $revision = new Revision;
+            \app\modules\user\models\UserStat::updateAllCounters(['editcount' => 1], ['id' => $this->me->id]);
 
-            $revision->postid = $model->id;
-            $revision->revtime = time();
-            $revision->text = $_POST['Post']['content'];
-            $revision->title = $_POST['Post']['title'];
-            $revision->uid = Yii::$app->user->getId();
-            $revision->status = ($allowEdit) ? Revision::STATUS_OK : Revision::STATUS_PEER;
+//            $orginContent = $model->content;
+//            $model->content = String::markdownToHtml($model->content);
+//            $model->excerpt = String::filterTitle($orginContent, 200);
 
-            $comment = String::filterTitle($_POST['Revision']['comment'], 200);
-            if (empty($comment)) {
-                $len = mb_strlen($revision->text, 'UTF8');
-                $oldlen = mb_strlen($oldtext, 'UTF8');
-                $d = $len - $oldlen;
-                $comment = (($d > 0) ? "增加了{$d}个字符" : "减少了" . (-$d) . "个字符");
+            if (!$model->isWiki()) {
+                if ($model->isSelf()) {
+                    $model->wiki = (isset($_POST['Post']['wiki']) && $_POST['Post']['wiki'] == 1) ? Post::WIKI_MODE : Post::UNWIKI_MODE;
+                }
             }
-            $revision->comment = $comment;
-            $revision->save();
-
-//			UserStat::Model()->updateCounters(array('editcount'=>1),"id=:id",array(":id"=>$this->me->id));
-
-            $activity = new Activity();
-            $activity->type = 'revise';
-            $activity->typeid = $model->id;
-            $activity->uid = Yii::$app->user->getId();
-            $activity->data = array(
-                'idtype' => ($model->isAnswer()) ? 'answer' : 'question',
-                'qid' => ($model->isQuestion()) ? $model->id : $model->question->id,
-                'qtitle' => ($model->isQuestion()) ? $model->title : $model->question->title,
-                'rid' => $revision->id,
-                'comment' => $comment,
-            );
-            $activity->save();
-
-            if ($allowEdit) {
-                UserStat::Model()->updateCounters(array('editcount' => 1), "id=:id", array(":id" => $this->me->id));
-                $model->attributes = $_POST['Post'];
-                $time = time();
-                $model->activity = $time;
-                $model->lastedit = $time;
-
-                $orginContent = $model->content;
-                $model->content = String::markdownToHtml($model->content);
-                $model->excerpt = String::filterTitle($orginContent, 200);
-                $model->revisionid = $revision->id;
-                if (!$model->isWiki()) {
-                    if ($model->isSelf()) {
-                        $model->wiki = (isset($_POST['Post']['wiki']) && $_POST['Post']['wiki'] == 1) ? Post::WIKI_MODE : Post::UNWIKI_MODE;
-                    } else {
-                        $model->wiki = ($model->checkToWiki()) ? Post::WIKI_MODE : Post::UNWIKI_MODE;
-                        //发通知
-                        if ($model->isWiki()) {
-                            $inbox = new Inbox;
-                            $inbox->title = ($model->isQuestion()) ? $model->title : $model->question->title;
-                            if ($model->isAnswer()) {
-                                $inbox->url = $this->createUrl('questions/view', array('id' => $model->idv, '#' => $model->id));
-                            } else {
-                                $inbox->url = $this->createUrl('questions/view', array('id' => $model->id));
-                            }
-                            $inbox->summary = String::filterTitle($orginContent, 100);
-                            $inbox->type = Inbox::$TYPE['wiki'];
-                            $inbox->uid = $model->uid;
-                            $inbox->save();
-                        }
-                    }
-                }
-                if ($model->save()) {
-                    $id = ($model->isAnswer()) ? $model->idv : $model->id;
-                    $this->redirect(array('/questions/view', 'id' => $id));
-                }
-            } else {  //只产生版本
+            if ($model->edit()) {
+                $activity = new Activity();
+                $activity->type = 'revise';
+                $activity->typeid = $model->id;
+                $activity->uid = Yii::$app->user->getId();
+                $activity->data = [
+                    'idtype' => ($model->isAnswer()) ? 'answer' : 'question',
+                    'qid' => ($model->isQuestion()) ? $model->id : $model->question->id,
+                    'qtitle' => ($model->isQuestion()) ? $model->title : $model->question->title,
+                    'rid' => $model->revisionid,
+                    'comment' => $model->currentRevision->comment,
+                ];
+                $activity->save();
                 $id = ($model->isAnswer()) ? $model->idv : $model->id;
-                $this->redirect(array('/questions/view', 'id' => $id));
+                $this->redirect(['/question/questions/view', 'id' => $id]);
             }
         }
 
@@ -1276,12 +1201,10 @@ class PostController extends BaseController
     public function loadModel($id = null)
     {
         if ($id === null) {
-            $id = $_GET['id'];
+            $id = Yii::$app->request->get('id');;
         }
         if ($this->_model === null) {
-            if (isset($id)) {
-                $this->_model = Post::findOne($id);
-            }
+            $this->_model = Post::findOne($id);
             if ($this->_model === null)
                 throw new \yii\web\HttpException(404, 'The requested page does not exist.');
         }

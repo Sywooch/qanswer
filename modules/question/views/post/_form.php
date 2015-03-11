@@ -21,29 +21,14 @@ $(function() {
 		'enableClientValidation'=>true,
 	]);
 	?>
-
-	<p class="note"><span class="required">*</span> 必填.</p>
-
-
     <?= $form->field($model, 'title')->textInput(['size'=>80,'maxlength'=>128]);?>
-
-    <div id="post-editor" class="form-group">
-        <?php
-            echo Html::activeTextArea($model,'content',array('rows'=>10, 'cols'=>92,'id'=>'wmd-input'));
-        ?>
-    </div>
-    <div class="draft-saved community-option" id="draft-saved">
-    草稿已保存
-    </div>
-    <?= $form->field($model, 'tags')->textInput(['size'=>80,'maxlength'=>128]);?>
-    <p class="hint">用空格分隔标签</p>
+    <?= $form->field($model, 'content')->textarea(['id' => 'wmd-input']);?>
+    <div class="draft-saved community-option" id="draft-saved">草稿已保存</div>
+    <?= $form->field($model, 'tags')->textInput(['placeholder' => '用空格分隔标签']);?>
 
 	<?php if (!$model->isNewRecord):?>
-	<div class="row">
-		<label for="Revision_comment">编辑原因</label>
-		<textarea id="Revision_comment" name="Revision[comment]" cols="70" rows="3"></textarea>
-	</div>
+        <?= $form->field($model, 'editComment')->textarea();?>
 	<?php endif;?>
-    <?php echo Html::submitButton($model->isNewRecord ? '提交' : '保存', ['class'=>'btn btn-default']); ?>
+    <?= Html::submitButton($model->isNewRecord ? '提交' : '保存', ['class'=>'btn btn-default']); ?>
 
 <?php ActiveForm::end(); ?>

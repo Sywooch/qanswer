@@ -7,6 +7,7 @@ use yii\helpers\Url;
 use Yii;
 use app\components\String;
 use app\models\UserStat;
+use app\models\Revision;
 
 class Post extends ActiveRecord
 {
@@ -107,6 +108,11 @@ class Post extends ActiveRecord
      * @var bool
      */
     private $hasExistAnswer = NULL;
+    
+    public $editComment = null;
+    
+    /** */
+    public $currentRevision = null;
 
     public static function tableName()
     {
@@ -131,6 +137,7 @@ class Post extends ActiveRecord
 //			array('tags', 'valtags','on'=>'qask'),
 //			array('content','required','on'=>'answer,tag'),
             array('content', 'required', 'on' => 'answer'),
+            ['editComment','string'],
 //			array('wiki','in','range'=>array(0,1),'on'=>'answer')
         );
     }
@@ -256,44 +263,44 @@ class Post extends ActiveRecord
      * @param 问题模型
      * @return boolean
      */
-    public function addAnswer($answer)
-    {
-        $answer->idv = $this->id;
-        $answer->idtype = self::IDTYPE_A;
-
-        $orginContent = $answer->content;
-        $answer->content = String::markdownToHtml($orginContent);
-        $answer->excerpt = String::filterTitle($orginContent, 200);
-        $answer->wiki = !$answer->isWiki() ? ($this->isWiki() ? self::WIKI_MODE : self::UNWIKI_MODE) : $answer->wiki;
-        $success = $answer->save();
-        if ($success) {
-            $poststate = new PostState();
-            $poststate->id = $answer->id;
-            $poststate->save();
-
-            $revision = new Revision;
-            $revision->postid = $answer->id;
-            $revision->revtime = $answer->createtime;
-            $revision->text = $orginContent;
-//			$revision->title 	= $model->title;
-            $revision->uid = $answer->uid;
-            $revision->status = Revision::STATUS_OK;
-            $revision->comment = "第一个版本";
-            $revision->save();
-
-            $answer->revisionid = $revision->id;
-            $answer->update(array('revisionid'));
-
-            $this->answercount++;
-            $this->activity = time();
-            $this->setScenario('qask');
-            $this->update();
-            //更新个人统计数量
-            UserStat::updateAllCounters(['acount' => 1], 'id=:uid', array(':uid' => $answer->uid));
-//			UserStat::Model()->updateCounters(array('acount'=>1),'id=:uid',array(':uid'=>$answer->uid));
-        }
-        return $success;
-    }
+//    public function addAnswer($answer)
+//    {
+//        $answer->idv = $this->id;
+//        $answer->idtype = self::IDTYPE_A;
+//
+//        $orginContent = $answer->content;
+//        $answer->content = String::markdownToHtml($orginContent);
+//        $answer->excerpt = String::filterTitle($orginContent, 200);
+//        $answer->wiki = !$answer->isWiki() ? ($this->isWiki() ? self::WIKI_MODE : self::UNWIKI_MODE) : $answer->wiki;
+//        $success = $answer->save();
+//        if ($success) {
+//            $poststate = new PostState();
+//            $poststate->id = $answer->id;
+//            $poststate->save();
+//
+//            $revision = new Revision;
+//            $revision->postid = $answer->id;
+//            $revision->revtime = $answer->createtime;
+//            $revision->text = $orginContent;
+////			$revision->title 	= $model->title;
+//            $revision->uid = $answer->uid;
+//            $revision->status = Revision::STATUS_OK;
+//            $revision->comment = "第一个版本";
+//            $revision->save();
+//
+//            $answer->revisionid = $revision->id;
+//            $answer->update(array('revisionid'));
+//
+//            $this->answercount++;
+//            $this->activity = time();
+//            $this->setScenario('qask');
+//            $this->update();
+//            //更新个人统计数量
+//            UserStat::updateAllCounters(['acount' => 1], 'id=:uid', array(':uid' => $answer->uid));
+////			UserStat::Model()->updateCounters(array('acount'=>1),'id=:uid',array(':uid'=>$answer->uid));
+//        }
+//        return $success;
+//    }
 
     /**
      * 检查当前用户是否已经存在答案
@@ -342,16 +349,17 @@ class Post extends ActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->createtime = time();
+                $this->activity = $this->createtime;
+                $this->uid = Yii::$app->user->getId();                
+            } else {
+                $time = time();
+                $this->activity = $time;
+                $this->lastedit = $time;
+            }
+            
             if ($this->isQuestion()) {
-                if ($this->isNewRecord) {
-                    $this->createtime = time();
-                    $this->activity = $this->createtime;
-//					$this->tags 		= implode(' ',$this->filterTags($this->tags));
-                    $this->uid = Yii::$app->user->getId();
-                } else {
-                    $this->activity = time();
-//					$this->tags = implode(' ',$this->filterTags($this->tags));
-                }
             } elseif ($this->isAnswer()) {
                 if ($this->isNewRecord) {
                     $this->createtime = time();
@@ -372,48 +380,55 @@ class Post extends ActiveRecord
             return false;
     }
 
-    public function save($runValidation = true, $attributes = null)
+    public function afterSave($insert, $changedAttributes)
     {
-        $model = new Post;
-        $succeeded = true;
-        $isNew = $this->isNewRecord;
+        
+        parent::afterSave($insert, $changedAttributes);
+    }
+    
+    public function edit()
+    {
+        if ($this->save()) {
+            if ($this->isNewRecord) {
+                $revision = new Revision;
+                $revision->postid = $this->id;
+                $revision->revtime = $this->createtime;
+                $revision->text = $this->content;
+                $revision->title = $this->title;
+                $revision->uid = $this->uid;
+                $revision->status = Revision::STATUS_OK;
+                $revision->comment = "第一个版本";
+                $revision->save();
 
-//		$transaction=$model->Transaction();
-        try {
-            $succeeded = parent::save($runValidation, $attributes);
-            if ($succeeded) {
-                if ($this->isQuestion()) {
-                    $postid = $this->id;
-                    if ($isNew) {
-                        if (!is_null($this->tags)) {
-                            $questionTag = new QuestionTag;
-                            $questionTag->addTags($this->_newTags, $postid);
+                $this->revisionid = $revision->id;
+                $this->update(false, ['revisionid']);
+            } else {
+                $revision = new Revision;
 
-                            $tag = new Tag;
-                            $tag->addTags($this->_newTags, $this->uid);
-                        }
-                    } else {
-                        $questionTag = new QuestionTag;
-                        $questionTag->updateTags($this->_oldTags, $this->_newTags, $postid);
+                $revision->postid = $this->id;
+                $revision->revtime = time();
+                $revision->text = $this->content;
+                $revision->title = $this->title;
+                $revision->uid = Yii::$app->user->getId();
+                //简化状态
+                $revision->status = Revision::STATUS_OK; //($allowEdit) ? Revision::STATUS_OK : Revision::STATUS_PEER;
 
-                        $tag = new Tag;
-                        $tag->updateTags($this->_oldTags, $this->_newTags, $this->uid);
-                    }
-                } elseif ($this->isAnswer()) {
-                    //				$criteria=new CDbCriteria;
-                    //				$criteria->addInCondition('id',array($this->idv));
-                    //				$this->updateCounters(array('answercount'=>1),$criteria);
-                } elseif ($this->isTag()) {
-                    
+                $comment = String::filterTitle($this->editComment, 200);
+                if (empty($comment)) {
+                    $len = mb_strlen($revision->text, 'UTF8');
+                    $oldlen = mb_strlen($this->lastrevision->text, 'UTF8');
+                    $d = $len - $oldlen;
+                    $comment = (($d > 0) ? "增加了{$d}个字符" : "减少了" . (-$d) . "个字符");
                 }
+                $revision->comment = $comment;
+                $revision->save();            
+                $this->revisionid = $revision->id;
+                $this->update(false, ['revisionid']);
             }
-//			$transaction->commit();
-        } catch (Exception $e) {
-            $transaction->rollBack();
-            throw new CDbException($e->getMessage(), 0, $e);
+            $this->currentRevision = $revision;
+            return true;
         }
-
-        return $succeeded;
+        return false;
     }
 
     public function afterFind()
