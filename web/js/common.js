@@ -6,7 +6,6 @@ iAsk.init = (function() {
 		$(document).keyup(function(event) {
 			if (event.which == 27) {
 				$("#lightbox, .error-notification, .popup, .post-moderator-menu").fadeOutAndRemove();
-				profileLink.hide();
 			}
 		})
 	};
@@ -148,7 +147,6 @@ iAsk.helpers = function() {
 					if (genuwine.isVisible()) {
 						genuwine.click()
 					}
-					profileLink.hide()
 				}
 			})
 		},
@@ -208,179 +206,6 @@ function showAjaxError(d, e) {
 	$errorNotification.fadeIn("fast");
 	setTimeout(c, 1000 * 30);
 };
-
-/*账户*/
-var profileLink = function() {
-	var gProfileHref;
-	var avatar;
-	var hideTimeId;
-	var showTimeId;
-	var intervalHandle;
-	var f = false;
-	var gUserLink;
-	var gTime;
-	var i;
-	var gUlinks;
-	var getProfileLink = function() {
-		return $(".profile-link")
-	};
-	var getProfileTri = function() {
-		return $(".profile-triangle")
-	};
-	var getProfilePopup = function() {
-		return $(".profile-popup")
-	};
-	var profileIsOn = function(_profileLink) {
-		if (!_profileLink) {
-			_profileLink = getProfileLink()
-		}
-		return _profileLink.hasClass("profile-link-on")
-	};
-	var w = function(y, z) {
-		z.toggleClass("profile-link-on", y);
-		getProfileTri().toggleClass("profile-triangle-on", y)
-	};
-	var createPopup = function(_profileLink) {
-		var popupHtml = $('<div class="profile-popup" style="position:absolute; display:none;"><div class="profile-wrapper"><div class="profile-gravatar"><a href="' + gProfileHref + '">' + avatar + '</a><ul class="profile-links"><li><a href="' + gUserLink + '">动态</a></li>' + '<li><a href="'+gUlinks.privileges+'">权限</a></li>' + '<li><a href="'+gUlinks.logout+'">退出</a></li></ul></div><div class="profile-stats"></div><div class="profile-footer"><span class="popup-clock"></span> <a>关闭</a></div></div></div>');
-		popupHtml.insertBefore(_profileLink).find(".profile-footer").click(profileLink.click);
-		if (!f) {
-			n(popupHtml);
-		}
-		return popupHtml
-	};
-	var loadProfile = function(container) {
-		if (container.data("loading")) {
-			return
-		}
-		container.data("loading", true);
-		var $profileStats = container.find(".profile-stats");
-		$profileStats.addSpinner();
-		$.ajax({
-			type: "GET",
-			url: iAsk.options.links.profilelink,
-			dataType: "html",
-			success: function(data) {
-				$(data).hide().appendTo($profileStats).fadeIn("fast")
-			},
-			error: function(B, C, A) {
-				container.data("loading", false)
-			},
-			complete: iAsk.helpers.removeSpinner
-		})
-	};
-	var showTime = function() {
-		var date = new Date();
-		date.setTime(date.getTime() + i * 1000);
-		var hour = date.getUTCHours(),
-		minute = date.getUTCMinutes();
-		if (hour < 10) {
-			hour = "0" + hour;
-		}
-		if (minute < 10) {
-			minute = "0" + minute;
-		}
-		$(".profile-popup .popup-clock").text("UTC time " + hour + ":" + minute);
-	};
-	var initInterval = function() {
-		if (intervalHandle) {
-			return;
-		}
-		intervalHandle = setInterval(showTime, 20000);
-		showTime();
-	};
-	var resetInterval = function() {
-		if (!intervalHandle) {
-			return
-		}
-		clearInterval(intervalHandle);
-		intervalHandle = null
-	};
-	var t = function() {
-		if (hideTimeId) {
-			clearTimeout(hideTimeId);
-			hideTimeId = null
-		}
-		showTimeId = setTimeout(profileLink.show, 450)
-	};
-	var s = function() {
-		if (showTimeId) {
-			clearTimeout(showTimeId);
-			showTimeId = null
-		}
-		hideTimeId = setTimeout(profileLink.hide, 1000)
-	};
-	var n = function($popupHtml) {
-		$popupHtml.hover(t, s)
-	};
-	return {
-		init: function(_avatarLink, A, _userLink, _timeDelta,_ulinks) {
-			var $profileLink = getProfileLink(),
-			$profileTri = getProfileTri();
-			gProfileHref = $profileLink.attr("href");
-			avatar = _avatarLink;
-			f = A;
-			gUserLink = _userLink;
-			i = _timeDelta || 0;
-			$profileTri.click(profileLink.click);
-			if (!A) {
-				n($profileLink.add($profileTri))
-			}
-			$(document).click(function(E) {
-				if (profileIsOn($profileLink) && E.target != $profileLink[0] && E.target != $profileTri[0] && !$.contains($(".profile-wrapper")[0], E.target)) {
-					profileLink.hide()
-				}
-			}),
-			gUlinks = _ulinks;
-		},
-		click: function() {
-			var $profileLink = getProfileLink();
-			clearTimeout(hideTimeId);
-			hideTimeId = null;
-			clearTimeout(showTimeId);
-			showTimeId = null;
-			if (profileIsOn($profileLink)) {
-				profileLink.hide()
-			} else {
-				profileLink.show()
-			}
-		},
-		show: function(_profileLink, _profilePopup) {
-			if (!_profileLink || typeof _profileLink == "number") {
-				_profileLink = getProfileLink()
-			}
-			if (!_profilePopup) {
-				_profilePopup = getProfilePopup()
-			}
-			if (!_profilePopup.length) {
-				_profilePopup = createPopup(_profileLink)
-			}
-			if (!profileIsOn(_profileLink)) {
-				_profilePopup.fadeIn("fast");
-				loadProfile(_profilePopup);
-				w(true, _profileLink);
-				gTime = new Date()
-			}
-			initInterval()
-		},
-		hide: function(y, z) {
-			if (!gTime || new Date().getTime() - gTime.getTime() < 500) {
-				return
-			}
-			if (!y || typeof y == "number") {
-				y = getProfileLink()
-			}
-			if (!z) {
-				z = getProfilePopup()
-			}
-			if (profileIsOn(y)) {
-				z.fadeOut("fast");
-				w(false, y)
-			}
-			resetInterval();
-		}
-	}
-} ();
-
 
 function moveScroller() {
 	var width = $("#scroller").width();
@@ -1311,7 +1136,7 @@ var vote = function() {
         alert(jClicked.attr('href'));
 		$.ajax( {
 			type : "POST",
-			url : iAsk.options.links.vote+"?postid=" + postId + "&type=" + voteTypeId,
+//			url : iAsk.options.links.vote+"?postid=" + postId + "&type=" + voteTypeId,
 			url : jClicked.attr('href'),
 			data : formData,
 			dataType : "json",

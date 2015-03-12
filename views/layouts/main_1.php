@@ -55,7 +55,6 @@ AppAsset::register($this);
 			'userView'			: '<?php echo Url::to('/users/view');?>',
 			'postView'			: '<?php echo Url::to('/post/view');?>',
 			'revisionsView'		: '<?php echo Url::to('/revisions/view');?>',
-			'profilelink'		: '<?php echo Url::to('/users/profilelink');?>',
 			'subscriber'		: '<?php echo Url::to('/tags/subscriber');?>',
 			'messageMark'		: '<?php echo Url::to('/messages/markread');?>',
 			'postComments'		: '<?php echo Url::to('/post/comments');?>'
