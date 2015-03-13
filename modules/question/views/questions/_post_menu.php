@@ -1,10 +1,11 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 ?>
 	<?php echo Html::a("编辑", array('post/edit','id'=>$data->id),array('title'=>"编辑"));?>
 	<span class="lsep">|</span>
-	<a title="举报或提醒版主注意" id="flag-post-<?php echo $data->id;?>">举报</a>
+    <?= Html::a("举报",'#',['data'=>['toggle'=>'modal','target'=>'#post-menu-dialog', 'href'=>  \yii\helpers\Url::to(['/question/post/popup','do'=>'flag','postid'=>$data->id])] , 'title' => '举报或提醒版主注意']); ?>
 
 <?php 
 $currentUser = Yii::$app->user->identity;
@@ -13,13 +14,24 @@ if ($currentUser->isAdmin() || $currentUser->isMod()
 		|| ($currentUser->checkPerm('closeMyQuestions') && $data->isSelf())):?>
 		<span class="lsep">|</span>
 	<?php if ($data->poststate->isClose()):?>
+        <?= Html::a("举报",'#',['data'=>['toggle'=>'modal','target'=>'#post-menu-dialog', 'href'=> Url::to(['/question/post/popup','do'=>'flag','postid'=>$data->id])] , 'title' => '举报或提醒版主注意']); ?>
 		<a title="投票重新打开" id="close-question-<?php echo $data->id;?>">
    		重新打开<?php echo ($data->poststate->closecount>0) ? '('.$data->poststate->closecount.')' : "";?>
 		</a>
 	<?php else:?>
-		<a title="投票关闭" id="close-question-<?php echo $data->id;?>">
-		关闭	<?php echo ($data->poststate->closecount>0) ? '('.$data->poststate->closecount.')' : "";?>
-		</a>
+        <?= 
+            Html::a(
+                "关闭".(($data->poststate->closecount>0) ? '('.$data->poststate->closecount.')' : ""),
+                '#',
+                ['data'=>[
+                    'toggle'=>'modal',
+                    'target'=>'#post-menu-dialog', 
+                    'href'=> Url::to(['/question/post/popup','do'=>'close','postid'=>$data->id])
+                    ] , 
+                 'title' => '举报或提醒版主注意'
+                ]
+            );
+        ?>
 	<?php endif;?>
 <?php endif;?>
 

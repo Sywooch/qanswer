@@ -5,11 +5,19 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 
+/**
+ * This is the model class for table "{{%user_limits}}".
+ *
+ * @property integer $uid
+ * @property string $action
+ * @property integer $period
+ * @property integer $count
+ */
 class UserLimits extends ActiveRecord
 {
 
     /**
-     * 举报：提醒版主注意
+     * 举报：提醒版主注意 @todo 废弃
      * @var string
      */
     const ACTION_INFORM_MOD = 'I';
@@ -31,21 +39,12 @@ class UserLimits extends ActiveRecord
     const ACTION_CLOSE_VOTE = 'C'; //关闭票
 
     /**
-     * @return string the associated database table name
+     * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%user_limits}}';
     }
-
-    public function rules()
-    {
-        return array(
-//			array('email','length','max'=>100),
-//			array('password','length','max'=>40),
-        );
-    }
-
 
     public static function remaining($uid, $action)
     {
@@ -53,9 +52,6 @@ class UserLimits extends ActiveRecord
 
         $limits = self::find()->where("uid=:uid AND action=:action", ['uid' => $uid, 'action' => $action])->one();
         switch ($action) {
-            case self::ACTION_INFORM_MOD:
-                $userlimit = Yii::$app->params['posts']['informModFlags'];
-                break;
             case self::ACTION_SPAM_FLAG:
                 $userlimit = Yii::$app->params['posts']['spamFlags'];
                 break;

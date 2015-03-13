@@ -42,7 +42,7 @@ AppAsset::register($this);
 			'unprotect' 		: '<?php echo Url::to('/post/unprotect');?>',
 			'lock'				: '<?php echo Url::to('/post/lock');?>',
 			'unlock' 			: '<?php echo Url::to('/post/unlock');?>',
-			'popup'				: '<?php echo Url::to(['/question/post/popup']);?>',
+			'popup'				: '<?php echo Url::to(['/question/post']);?>',
 			'commenthelp'		: '<?php echo Url::to('/post/commenthelp');?>',
 			'login'		 		: '<?php echo Url::to('/users/login');?>',
 			'validateduplicate'	: '<?php echo Url::to('/post/validateduplicate');?>',

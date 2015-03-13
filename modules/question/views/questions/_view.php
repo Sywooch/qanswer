@@ -74,3 +74,19 @@ use app\components\Formatter;
         <?= $this->render('/post/_comments',array('data'=>$data));?>
         <?= $this->render('_bounty-notification',array('data'=>$data));?>
     </div>
+<?= $this->render('dialog'); ?>
+<script>
+    $('#post-menu-dialog').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button that triggered the modal
+//      var recipient = button.data('whatever') // Extract info from data-* attributes
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this);
+      $.get(button.attr('data-href'),function(response) {
+          modal.find('.modal-body').html(response);
+//          alert(modal.find('.modal-body'));
+      });
+      modal.find('.modal-title').text('New message to ')
+      
+    });
+</script>

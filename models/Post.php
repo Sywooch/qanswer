@@ -9,6 +9,34 @@ use app\components\String;
 use app\models\UserStat;
 use app\models\Revision;
 
+/**
+ * This is the model class for table "{{%post}}".
+ *
+ * @property integer $id
+ * @property integer $idv
+ * @property string $idtype
+ * @property integer $revisionid
+ * @property integer $uid
+ * @property integer $createtime
+ * @property integer $activity
+ * @property integer $lastedit
+ * @property integer $status
+ * @property integer $accepted
+ * @property integer $score
+ * @property integer $answercount
+ * @property integer $commentcount
+ * @property integer $viewcount
+ * @property integer $favcount
+ * @property integer $flagcount
+ * @property string $title
+ * @property string $content
+ * @property string $excerpt
+ * @property string $tags
+ * @property integer $useful
+ * @property integer $useless
+ * @property integer $aupvotes
+ * @property integer $wiki
+ */
 class Post extends ActiveRecord
 {
 

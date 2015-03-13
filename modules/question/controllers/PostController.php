@@ -854,7 +854,8 @@ class PostController extends BaseController
                               $flag->idval = $postid;
                               $flag->idtype = Flag::IDTYPE_P;
                               $flag->save();
-                              }* */
+                              }
+                            */
                         }
                     }
                 }
@@ -1100,17 +1101,16 @@ class PostController extends BaseController
             $th = Yii::$app->params['reputations']['flag'];
             echo "威望达到{$th}才能举报.";
         } else {
-            $do = $_GET['do'];
-            $postid = $_GET['postid'];
+            $do = \Yii::$app->request->get('do');
+            $postid = \Yii::$app->request->get('postid');
             $uid = Yii::$app->user->getId();
             if ($do == 'close') {
                 $question = Post::findOne($postid);
-                echo $this->renderPartial('popup-close', array('question' => $question));
+                return $this->renderPartial('popup-close', ['question' => $question]);
             } elseif ($do == 'flag') {
                 $post = Post::findOne($postid);
-                $remaining = UserLimits::remaining($uid, UserLimits::ACTION_INFORM_MOD);
                 $spamRemaining = UserLimits::remaining($uid, UserLimits::ACTION_SPAM_FLAG);
-                echo $this->renderPartial('popup_flag', array('post' => $post, 'spamRemaining' => $spamRemaining, 'remaining' => $remaining));
+                return $this->renderPartial('popup_flag', ['post' => $post, 'spamRemaining' => $spamRemaining]);
             } else {
                 $flagcount = Flag::getFlagcount($postid, $uid);
                 echo $this->renderPartial('popup', array('postid' => $postid, 'flagcount' => $flagcount));

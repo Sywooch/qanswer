@@ -320,7 +320,7 @@ $.fn.extend({
 			dataType: "html",
 			success: function(data) {
 				var $html = $(data);
-				$html.find(".popup-actions-cancel, .popup-close a").click(function() {
+				$html.find(".popup-actions-cancel").click(function() {
 					$html.fadeOutAndRemove()
 				});
 				$html.find("input:radio[disabled=disabled] + label.action-label").addClass("action-disabled");
@@ -328,54 +328,11 @@ $.fn.extend({
 					$html.find("ul.action-list > li:not(.action-selected) .action-desc").hide()
 				}
 				
-				var $radio = $html.find("input:radio:not(.action-subform input)");
-				$radio.closest("li").bind("hide-action",function() {
-					var $this = $(this);
-					var i = ".action-subform" + (param.hideDescriptions ? ", .action-desc": "");
-					$this.removeClass("action-selected").find(i).slideUp("fast");
-				}).bind("show-action", function() {
-					var $this = $(this);
-					if ($this.hasClass("action-selected")) {
-						return
-					}
-					$this.siblings(".action-selected").trigger("hide-action");
-					$this.addClass("action-selected").find(".action-subform").slideDown("fast",function() {
-						if (param.subformShow) {
-							param.subformShow($(this))
-						}
-						if (param.subformFocusInput) {
-							var j = $(this).find("input[type=text], textarea").not(".actual-edit-overlay").eq(0);
-							if (j.length) {
-								j.focus()
-							}
-						}
-					});
-					if (param.hideDescriptions) {
-						$this.find(".action-desc").slideDown("fast")
-					}
-					if (param.actionSelected) {
-						param.actionSelected($this)
-					}
-					$html.find(".popup-submit").enable()
-				});
-				$radio.click(function() {
-					$(this).closest("li").trigger("show-action")
-				});
 				$html.appendTo(that.parent());
 				if (param.loaded) {
 					param.loaded($html)
 				}
 				var g = function() {};
-				if (param.subformShow) {
-					var h = $html.find("li.action-selected .action-subform");
-					if (h.length > 0) {
-						g = function() {
-							h.each(function() {
-								param.subformShow($(this))
-							})
-						}
-					}
-				}
 				$html.center().fadeIn("fast", g)
 			},
 			error: function() {
@@ -1025,9 +982,9 @@ var vote = function() {
 		unbindVoteClicks().click(function() {
 			showNotification($(this), "请首先 " + anchor + " 才能继续投票.")
 		});
-		getFlagClick().unbind("click").click(function() {
-			showNotification($(this), "请首先 " + anchor + " 才能举报.")
-		})
+//		getFlagClick().unbind("click").click(function() {
+//			showNotification($(this), "请首先 " + anchor + " 才能举报.")
+//		})
 	};
 	var promptToLogin = false;
 	var showPromptToLogin = function(jClicked) {
@@ -1136,7 +1093,6 @@ var vote = function() {
         alert(jClicked.attr('href'));
 		$.ajax( {
 			type : "POST",
-//			url : iAsk.options.links.vote+"?postid=" + postId + "&type=" + voteTypeId,
 			url : jClicked.attr('href'),
 			data : formData,
 			dataType : "json",
@@ -1193,17 +1149,16 @@ var vote = function() {
 	/* flag */
 	var bindFlagClicks = function(jClicks) {
 		var postid = jClicks.attr("id").substring("flag-post-".length);
+        
 		jClicks.loadPopup({
 			url: iAsk.options.links.popup+"?do=flag&postid="+postid,
 			loaded: loadFunc,
 			hideDescriptions: true,
 			actionSelected: C,
-			subformShow: subform
 		})
 	};
 	var loadFunc = function(popupHtml) {
 		P = null;
-		initFlagPopup(popupHtml);
 		popupHtml.find("form").submit(function() {
 			submitFlag(popupHtml);
 			return false;
@@ -1218,46 +1173,6 @@ var vote = function() {
 		$(".flag-remaining-spam").toggle(al);
 		$(".flag-remaining-inform").toggle(!al)
 	};	
-	var initFlagPopup = function(popupHtml) {
-		var $submit = popupHtml.find(".popup-submit");
-		var $textarea = popupHtml.find('textarea[name="flag-reason"]');
-		
-		$textarea.focus(function() {
-			$textarea.hideHelpOverlay();
-			var $radio = $textarea.closest("li").find("input:radio");
-			if (!$radio.is(":checked")) {
-				$radio.attr("checked", "checked")
-			}
-		}).charCounter({
-			min: 10,
-			max: 500,
-			setIsValid: function(b) {
-				$submit.enable(b)
-			}
-		});
-		var subformAction = $textarea.closest(".action-subform");
-		subformAction.find("input.flag-prefilled").click(function() {
-			$submit.enable()
-		});
-		subformAction.find('input[value="other"]').click(function() {
-			$textarea.focus()
-		});
-		subformAction.find("label, input:radio").css("cursor", "pointer")
-	};
-	var subform = function(am) {
-		if (!am.is(".mod-attention-subform")) {
-			return
-		}
-		var al = am.find('textarea[name="flag-reason"]');
-		al.helpOverlay();
-		if (am.find("input[value=other]:checked").length) {
-			al.focus()
-		} else {
-			if (!am.find("input:radio:checked").length) {
-				am.closest(".popup").find(".popup-submit").disable()
-			}
-		}
-	};
 	var submitFlagLoad = function(popupHtml, ao) {
 		ao.closest("li").siblings("li").trigger("hide-action");
 		if (P) {
@@ -1272,11 +1187,9 @@ var vote = function() {
 			var isClosePopupForFlagging = $("#flag-isClosePopupForFlagging").val() == "true";
 			submitForFlagging(_jClick, postid, isClosePopupForFlagging, popupHtml)
 		}
-		popupHtml.find(".popup-submit").disable();
 		ao.removeAttr("checked")
 	};
 	var submitFlag = function(popupHtml) {
-		popupHtml.find(".popup-submit").disable().siblings(".spinner-container").addSpinner();
 		var postid = popupHtml.attr("id").substr("flag-popup-".length);
 		var jClick = $("#flag-post-" + postid);
 		var typeid = popupHtml.find('input[name="flag-post"]:checked').val();
@@ -1359,12 +1272,6 @@ var vote = function() {
 		})
 	};
 	var popupProcess = function($flaggingHtml, jClick, popupHtml) {
-		$flaggingHtml.find(".popup-close").click(function() {
-			$flaggingHtml.fadeOutAndRemove();
-			if (popupHtml) {
-				popupHtml.remove()
-			}
-		});
 		var $actionsCancel = $flaggingHtml.find(".popup-actions-cancel");
 		if (popupHtml) {
 			$actionsCancel.text("back").click(function() {
@@ -1476,9 +1383,6 @@ var vote = function() {
 	var bindBackEvent = function() {
 		$(".popup-subpane").removeClass("popup-active-pane").hide();
 		$("#pane-main").addClass("popup-active-pane").show().find("input[type=radio]:checked").removeAttr("checked").end().find("li.action-selected").removeClass("action-selected");
-		$(".popup").find(".popup-submit").disable().end().find(".popup-actions-cancel").html("取消").unbind("click").click(function() {
-			$(".popup").fadeOutAndRemove()
-		})
 	};
 	var validateDupQuestionSubmit = function(popSubmit, dupQuestion, questionid, dupQuestionId) {
 		var $masterPreview = dupQuestion.parent().find(".selected-master-preview");
@@ -1638,9 +1542,9 @@ var vote = function() {
 				bindAnonymousDisclaimers();
 			} else {
 				bindVoteClicks();
-				getFlagClick().unbind("click").click(function() {
-					bindFlagClicks($(this))
-				});	
+//				getFlagClick().unbind("click").click(function() {
+//					bindFlagClicks($(this))
+//				});	
 				getProtectClick().unbind("click").click(function() {
 					var postid = this.id.substring("protect-post-".length);
 					if (confirm("是否确定要让本问题回答受限？")) {
@@ -1939,11 +1843,6 @@ var comments = function() {
 							}
 						} else {
 							B.hide()
-						}
-						if (C) {
-							A.find(".popup-submit").removeAttr("disabled")
-						} else {
-							A.find(".popup-submit").attr("disabled", "disabled")
 						}
 					};
 					z();
