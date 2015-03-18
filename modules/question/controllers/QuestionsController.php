@@ -40,7 +40,6 @@ class QuestionsController extends BaseController
                 throw new \yii\web\NotFoundHttpException(404, '请求页面不存在.');
             }
         }
-        $relatedQuestions = $question->getRelatedQuestions();
         $answer = $this->newAnswer($question);
 
         $ip = ip2long(Yii::$app->request->userIp);
@@ -63,7 +62,7 @@ class QuestionsController extends BaseController
             'answers' => $answers,
             'tags' => $tags,
             'pages' => $pages,
-            'relatedQuestions' => $relatedQuestions,
+            'relatedQuestions' => $question->getRelatedQuestions(),
             'tab' => $tab,
         ]);
     }

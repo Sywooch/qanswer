@@ -38,10 +38,6 @@ AppAsset::register($this);
 			"inboxUnviewedCount": 0
 		},
 		"links": {
-			'protect'			: '<?php echo Url::to('/post/protect');?>',
-			'unprotect' 		: '<?php echo Url::to('/post/unprotect');?>',
-			'lock'				: '<?php echo Url::to('/post/lock');?>',
-			'unlock' 			: '<?php echo Url::to('/post/unlock');?>',
 			'popup'				: '<?php echo Url::to(['/question/post']);?>',
 			'commenthelp'		: '<?php echo Url::to('/post/commenthelp');?>',
 			'login'		 		: '<?php echo Url::to('/users/login');?>',

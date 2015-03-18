@@ -954,7 +954,7 @@ class PostController extends BaseController
                     break;
             }
             echo \yii\helpers\Json::encode($result);
-        } elseif ($op == 'flag') {
+        } elseif ($op == 'flag') {  //@todo 功能已经移除
             $flagcount = CommentVote::getFlagCount($commentId, $this->voteTypeIds['offensive']);
             echo $this->renderPartial('comments_popup_flag', array('comment' => $comment, 'flagcount' => $flagcount));
         } else {
@@ -963,12 +963,8 @@ class PostController extends BaseController
                 $comment->message = String::filterString($_POST['comment'], 300, array('in_slashes' => 0, 'out_slashes' => 0, 'html' => -1));
                 $comment->save();
 
-                $criteria = new CDbCriteria(array(
-                    'condition' => 'idv=' . $comment->idv,
-                ));
-
                 $comments = Comment::findAll(['idv' => $comment->idv]);
-                echo $this->renderPartial('_comment_ajax', array('comments' => $comments));
+                echo $this->renderAjax('_comment_ajax', ['comments' => $comments]);
             } else {
                 echo "false";
             }
@@ -1052,7 +1048,7 @@ class PostController extends BaseController
             } else {  //显示全部评论
                 $postid = Yii::$app->request->get('id');
                 $comments = Comment::findAll(['idv' => $postid, 'status' => Comment::STATUS_OK]);
-                echo $this->render('_comment_ajax', ['comments' => $comments]);
+                return $this->renderAjax('_comment_ajax', ['comments' => $comments]);
             }
         } elseif ($op == 'body') {
             $data = Post::Model()->findByPk($_GET['id']);
@@ -1071,28 +1067,6 @@ class PostController extends BaseController
                 $this->redirect(array('index'));
         } else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
-    }
-
-    public function actionIndex()
-    {
-        $criteria = new CDbCriteria(array(
-            'condition' => 'status=' . Post::STATUS_PUBLISHED,
-            'order' => 'update_time DESC',
-            'with' => 'commentCount',
-        ));
-        if (isset($_GET['tag']))
-            $criteria->addSearchCondition('tags', $_GET['tag']);
-
-        $dataProvider = new CActiveDataProvider('Post', array(
-            'pagination' => array(
-                'pageSize' => Yii::$app->params['pages']['postsPerPage'],
-            ),
-            'criteria' => $criteria,
-        ));
-
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-        ));
     }
 
     public function actionPopup()
@@ -1149,7 +1123,7 @@ class PostController extends BaseController
         //权限管理
         //设置
         if ($this->me->isAdmin() || $this->me->isMod() || $this->me->checkPerm('protect')) {
-            $postid = Yii::$app->request->post('id');
+            $postid = Yii::$app->request->get('id');
             $post = Post::findOne($postid);
             if ($post && $post->isQuestion()) {
                 $post->poststate->protect = PostState::POST_PROTECT;
@@ -1209,11 +1183,6 @@ class PostController extends BaseController
                 throw new \yii\web\HttpException(404, 'The requested page does not exist.');
         }
         return $this->_model;
-    }
-
-    public function actionCommenthelp()
-    {
-        echo $this->renderPartial('_comment_help');
     }
 
     /**

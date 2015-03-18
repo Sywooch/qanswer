@@ -332,7 +332,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getUrl()
     {
-        return Yii::$app->urlManager->createUrl(['/users/view', 'id' => $this->id]);
+        return Yii::$app->urlManager->createUrl(['/user/view/index', 'id' => $this->id]);
     }
 
     public function getAbsoluteUrl()

@@ -71,7 +71,7 @@ use app\components\Formatter;
                 </div>
             </div>
         </div>
-        <?= $this->render('/post/_comments',array('data'=>$data));?>
+        <?= $this->render('/post/_comments', ['data'=>$data]);?>
         <?= $this->render('_bounty-notification',array('data'=>$data));?>
     </div>
 <?= $this->render('dialog'); ?>

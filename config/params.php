@@ -67,7 +67,6 @@ return array(
 		'userIndexPagesize'		=> 100,		//用户首页分页数量
 		'searchPagesize'		=> 30,
 		'hotQuestionsPagesize'	=> 20,
-		'modtoolsPagesize'		=> 10,
 		'badgeAwardsPagesize'	=> 24,		//徽章授予记录分页
 		'postsPerPage'			=> 30,
 	),
@@ -95,9 +94,6 @@ return array(
 	'users'		=> array(
 		'votesPerDay'			=> 30,		//每天投票数量（指vote up/vote down）
 		'closeVotesPerDay'		=> 12,		//每天可投关闭票数量
-	),
-	'modtools'	=> array(
-
 	),
 	'oauth'		=> array(
 		'douban'	=> array(

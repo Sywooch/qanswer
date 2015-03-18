@@ -115,14 +115,14 @@ class Question extends Post
     public function getUrl()
     {
         if ($this->isQuestion()) {
-            return Url::to(['questions/view', 'id' => $this->id]);
+            return Url::to(['/question/questions/view', 'id' => $this->id]);
         }
     }
 
     public function getAbsoluteUrl()
     {
         if ($this->isQuestion()) {
-            return Yii::$app->urlManager->createAbsoluteUrl(['questions/view', 'id' => $this->id]);
+            return Yii::$app->urlManager->createAbsoluteUrl(['/questionquestions/view', 'id' => $this->id]);
         }
     }
 
@@ -143,12 +143,6 @@ class Question extends Post
 //            'AScores' => array(self::STAT, 'Post', 'idv', 'condition' => 'idtype="' . self::IDTYPE_A . '"', 'select' => "sum(score)"),
 //        );
 //    }
-
-
-    public function getLastrevision()
-    {
-        return $this->hasOne(Revision::className(), ['id' => 'revisionid']);
-    }
 
     public function getBounties()
     {
@@ -337,15 +331,6 @@ class Question extends Post
         return $answers;
     }
     
-    /**
-     * 帖子是否是我自己的
-     * @return bool 是：返回true
-     */
-    public function isSelf()
-    {
-        return ($this->uid == Yii::$app->user->id);
-    }
-
     /**
      * 是否是提问者
      */

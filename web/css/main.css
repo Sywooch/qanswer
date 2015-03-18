@@ -215,11 +215,6 @@ a:hover {
 	margin-left: 3px;
 }
 
-.lsep {
-	color:#CCCCCC;
-	font-size:110%;
-	margin:0px 2px;
-}
 
 /*nav*/
 .askquestion {
@@ -254,16 +249,6 @@ table {
 }
 .envelope-on {
 	background-position: 0px -785px;
-}
-.grippie{
-	background-position:321px -823px;
-	border:1px solid #ddd;
-	border-width:0pt 1px 1px;
-	cursor:s-resize;
-	height:9px;
-	overflow:hidden;
-	background-color:#eee;
-	margin-right:-8px !important;
 }
 .vote-up-off, .vote-up-on, .vote-down-off, .vote-down-on, .star-on, .star-off, .comment-up-off, .comment-up-on, .comment-flag, .flag-off, .vote-accepted-off, .vote-accepted-on {
 	font-size:1px;
@@ -340,11 +325,11 @@ table {
 	text-decoration:none;
 }
 .post-menu>a,.edit-tags-wrapper>span>a {
-	padding: 0px 3px 2px 3px;
-	color: #888;
+	padding: 3px;
+	color: #BBB;
 }
 .post-menu>a:hover,.edit-tags-wrapper>span>a:hover {
-	background-color: #777;
+	background-color: #999;
 	color: #fff;
 	text-decoration: none;
 }
@@ -353,10 +338,6 @@ table {
 }
 .edit-tags-wrapper>a.post-tag {
 	margin-right: 6px;
-}
-.post-menu .lsep {
-	margin: 0px;
-	padding: 0px;
 }
 .form-item {
 	padding: 10px 0px 15px 0px;
@@ -533,10 +514,6 @@ a.comment-user {
 	font-weight:bold;
 	padding-right:2px;
 }
-.comment-form > form textarea {
-    height: 5em;
-    margin-bottom: 4px;
-}
 .comment-form > form > table {
     margin-right: 5px;
     margin-top: 5px;
@@ -546,37 +523,17 @@ a.comment-user {
 .comment-form > form > table td {
     vertical-align: top;
 }
-.comment-form > form input {
-    cursor: pointer;
-    display: block;
-    margin-left: 10px;
-    margin-top: 1px;
-    width: 100px;
-}
 .comment-form .edit-comment-cancel, .comment-form .comment-help-link {
     margin-left: 10px;
 }
-.comment-help{background-color:#FEFAE2;border:1px solid #F3EED5;margin-top:5px;padding:5px;width:465px;}
 
 .supernova {
 	color:#FE7A15 !important;
 }
-.question-row {
-	overflow: hidden;
-}
 .question-status {
 	background-color:#EEEEEE;
-	clear:both;
-	line-height:150%;
-	margin-bottom:-5px;
 	margin-top:15px;
-	padding:8px 8px 1px 60px;
-	width:657px;
-}
-.question-status h2 {
-	font-size:150%;
-	line-height:125%;
-	margin-bottom:4px;
+	padding:8px 8px 8px 60px;
 }
 .mod-flair {
 	color:#0077CC;
@@ -1491,7 +1448,6 @@ a.comment-user {
 tr.comment-hover{
 	background-color:#fafafa;
 }
-.comment img{vertical-align:middle;}
 
 /*module*/
 .module {
@@ -1689,9 +1645,6 @@ tr.comment-hover{
     display: inline-block;
     height: 23px;
     width: 20px;
-}
-.mb {
-    margin-bottom: 5px;
 }
 .post-badge {
 	margin-bottom: 15px;
@@ -1956,4 +1909,8 @@ ul.setting-notify li label {margin-left:10px;}
 
 .row-space-top-8 {
 	margin-top: 50px
+}
+
+.dno {
+	display: none;
 }

@@ -4,7 +4,7 @@ use app\components\Formatter;
 ?>
 <?php foreach ($comments as $i => $comment): ?>
     <?php
-    if ($i >= 5 && $ajax === false) {
+    if ($i >= 5 && !\Yii::$app->request->isAjax) {
         break;
     }
     ?>
@@ -26,18 +26,17 @@ use app\components\Formatter;
                                 <div title="<?php echo Yii::t('posts', "you've voted for this as a great comment"); ?>" class="comment-up-on">up voted</div>
                             <?php else: ?>
                                 <a title="<?php echo Yii::t('posts', 'this is a great comment'); ?>" class="comment-up comment-up-off" style="visibility: hidden;">up vote</a>
+                                <?= 
+                                    Html::a(
+                                        Yii::t('posts', 'this is a great comment'),
+                                        ['/question/post/comments', 'id' => $comment->id, 'op' => 'vote', 'typeid' => 2],
+                                        ['class' => 'comment-up comment-up-off', 'style' =>"visibility: hidden;"]
+                                    ); 
+                                ?>
                         <?php endif; ?>
                         </td>
                     <?php endif; ?>
                     </tr>
-                    <?php if (!Yii::$app->user->isGuest): ?>
-                        <?php if (!($comment->myvotes > 0)): ?>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td><a title="举报" class="comment-flag flag-off" style="visibility: hidden;">flag</a></td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endif; ?>
                 </tbody>
             </table>
         </td>
@@ -45,16 +44,16 @@ use app\components\Formatter;
         <td class="comment-text">
             <div>
                 <span class="comment-copy"><?php echo $comment->message; ?></span> &ndash;&nbsp;
-                <?php echo Html::a($comment->commentauthor->username, array('users/view', 'id' => $comment->commentauthor->id), array('class' => 'comment-user', 'title' => $comment->commentauthor->reputation . " 威望")); ?>
+                <?php echo Html::a($comment->commentauthor->username, $comment->commentauthor->getUrl(), ['class' => 'comment-user', 'title' => $comment->commentauthor->reputation . " 威望"]); ?>
                 <span class="comment-date">
                     <span title="<?php echo Formatter::time($comment->time); ?>"><?php echo Formatter::ago($comment->time); ?></span>
                 </span>&nbsp;
                 <?php if (Yii::$app->user->identity && $comment->isNotTimeout() && $comment->isself()): ?>
                     <a class="comment-edit">编辑</a>&nbsp;
-                    <span class="comment-delete delete-tag" style="visibility: hidden;" title="删除该条评论"></span>
+                    <span class="comment-delete delete-tag glyphicon glyphicon-remove-circle" style="visibility: hidden;" title="删除该条评论"></span>
                 <?php endif; ?>
             </div>
-            <form id="edit-comment-<?php echo $comment->id; ?>" class="dno">
+            <form action="<?= \yii\helpers\Url::to(['/question/post/comments', 'id' => $comment->id]); ?>" id="edit-comment-<?php echo $comment->id; ?>" class="dno">
                 <div class="dno"><?php echo $comment->message; ?></div>
             </form>
         </td>
