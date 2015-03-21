@@ -6,6 +6,24 @@ use app\models\User;
 
 use yii\db\ActiveRecord;
 
+/**
+ * This is the model class for table "{{%post_state}}".
+ *
+ * @property integer $id
+ * @property integer $lock
+ * @property integer $lockuid
+ * @property integer $locktime
+ * @property integer $protect
+ * @property integer $protectuid
+ * @property integer $protecttime
+ * @property integer $close
+ * @property integer $closecount
+ * @property integer $closereason
+ * @property integer $closetime
+ * @property integer $delete
+ * @property integer $deletecount
+ * @property integer $deletetime
+ */
 class PostState extends ActiveRecord
 {
 
@@ -37,14 +55,6 @@ class PostState extends ActiveRecord
     {
         return '{{%post_state}}';
     }
-// @todo delete
-//    public function relations()
-//    {
-//        return array(
-//            'author' => array(self::BELONGS_TO, 'User', 'lockuid'),
-//            'protectauthor' => array(self::BELONGS_TO, 'User', 'protectuid'),
-//        );
-//    }
     
     public function getAuthor()
     {

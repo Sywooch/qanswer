@@ -1,7 +1,7 @@
 <?php
 $this->title = '提问';
 ?>
-<h1>我要提问</h1>
+<h1 class="page-header">我要提问</h1>
 <div class="row">
     <div id="mainbar" class="col-md-9">
         <script type="text/javascript">

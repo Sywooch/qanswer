@@ -470,52 +470,6 @@ class Post extends ActiveRecord
         return $tagarr;
     }
 
-    public function getRelatedQuestions()
-    {
-        //1. 首先获取标签
-        //2. 查询包含该标签的所有问题
-        //3. 根据数量排序
-        //4. 取10个结果
-        $questions = array();
-        $ids = array();
-
-        $cacheId = "question_relate_" . $this->id;
-        $ids = Yii::$app->cache->get($cacheId);
-        if ($ids === false) {
-            $models = QuestionTag::find()->where(['tag' => $this->_oldTags])->all();
-
-            $data = array();
-            if (count($models) > 0) {
-                foreach ($models as $model) {
-                    if (in_array($model->tag, $this->_oldTags) && $model->postid != $this->id) {
-                        if (isset($data[$model->postid])) {
-                            $data[$model->postid] ++;
-                        } else {
-                            $data[$model->postid] = 1;
-                        }
-                    }
-                }
-                if (count($data) <= 0)
-                    return array();
-                arsort($data, SORT_NUMERIC);
-                $data = array_slice($data, 0, 10, true);
-                foreach ($data as $k => $v) {
-                    $ids[] = $k;
-                }
-            }
-            Yii::$app->cache->set($cacheId, $ids, 3600 * 24);
-        }
-
-        if (is_array($ids) && count($ids) > 0) {
-//			$criteria=new CDbCriteria;
-//			$criteria->addInCondition('id',$ids,'OR');
-//			$questions = Post::model()->findAll($criteria);
-
-            $questions = Post::find()->where(['id' => $ids])->all();
-        }
-        return $questions;
-    }
-
     public function isQuestion()
     {
         return ($this->idtype == self::IDTYPE_Q);

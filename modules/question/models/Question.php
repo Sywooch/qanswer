@@ -178,8 +178,9 @@ class Question extends Post
             $this->update();
             //更新个人统计数量
             UserStat::updateAllCounters(['acount' => 1], 'id=:uid', array(':uid' => $answer->uid));
+            return true;
         }
-        return $success;
+        return FALSE;
     }
 
     /**
@@ -312,15 +313,6 @@ class Question extends Post
         return $answers;
     }
     
-    /**
-     * 是否是提问者
-     */
-    public function isAsker()
-    {
-        $authorId = ($this->isQuestion()) ? $this->uid : $this->question->uid;
-        return ($authorId == Yii::$app->user->id);
-    }
-
     /**
      * @todo 该函数以前未实现，需测试
      * @return type
