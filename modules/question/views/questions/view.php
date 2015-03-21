@@ -28,48 +28,9 @@ $(function(){
         </div>
 
         <?= $this->render('_question_status', ['model' => $model]);?>
+        <?= $this->render('_answer_list', ['model' => $model, 'answers' => $answers, 'pages' => $pages, 'tab' => $tab]);?>
 
-        <div id="answers">
-            <a name="tab-top"></a>
-            <div id="answers-header">
-                <div class="subheader answers-subheader">
-                    <h2><?php echo $model->answercount; ?>个回答</h2>
-                    <?php
-                    $submenu = array(
-                        'items' => array(
-                            array('label' => '活跃', 'url' => $model->url . '?tab=activity#tab-top', 'options' => array('title' => '按活跃度排序')),
-                            array('label' => '时间', 'url' => $model->url . '?tab=oldest#tab-top', 'options' => array('title' => '按时间排序')),
-                            array('label' => '投票', 'url' => $model->url . '?tab=votes#tab-top', 'options' => array('title' => '按投票排序')),
-                        ),
-                        'options' => ['id' => 'tabs', 'class' => 'nav nav-tabs']
-                    );
-                    switch ($tab) {
-                        case 'activity':
-                            $submenu['items'][0]['options']['class'] = 'active';
-                            break;
-                        case 'oldest':
-                            $submenu['items'][1]['options']['class'] = 'active';
-                            break;
-                        case 'votes':
-                            $submenu['items'][2]['options']['class'] = 'active';
-                            break;
-                    }
-                    echo \yii\widgets\Menu::widget($submenu);
-                    ?>
-                </div>
-            </div>
-
-            <?php
-            foreach ($answers as $ans) {
-                if (!$ans->poststate->isDelete() || ($this->me && ($this->me->isAdmin() || $this->me->isMod() || $ans->isSelf() || $this->me->checkPerm('moderatorTools')))) {
-                    echo $this->render('_answer', array('data' => $ans, 'question' => $model));
-                }
-            }
-            ?>
-            <?php
-            echo yii\widgets\LinkPager::widget(['pagination' => $pages]);
-            ?>
-        </div>
+        
 
         <?php if ($answer != null && !$model->checkExistAnswer()): ?>
             <div id="post-form">

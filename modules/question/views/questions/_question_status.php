@@ -7,12 +7,8 @@ use app\components\Formatter;
 <?php if ($model->poststate->isLock()): ?>
 <div class="question-status">
     <h2>
-        <?php if ($model->poststate->lockuid == 0): ?>
-            <span>社区管理员</span>
-        <?php else: ?>
-            <?php echo Html::a($model->poststate->author->username, $model->poststate->author->getUrl()); ?>
-            <span title="版主" class="mod-flair">♦</span>
-        <?php endif; ?>
+        <?php echo Html::a($model->poststate->author->username, $model->poststate->author->getUrl()); ?>
+        <span title="版主" class="mod-flair">♦</span>
         <b>锁定</b>于
         <span class="relativetime" title="<?php echo Formatter::time($model->poststate->locktime); ?>"><?php echo Formatter::ago($model->poststate->locktime); ?></span>
     </h2>

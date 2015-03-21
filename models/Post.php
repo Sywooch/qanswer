@@ -262,11 +262,6 @@ class Post extends ActiveRecord
         return $this->hasMany(Revision::className(), ['postid' => 'id'])->where(['status' => Revision::STATUS_OK])->count();
     }
     
-    public function getBounties()
-    {
-        return $this->hasMany(Bounty::className(), ['questionid' => 'id']);
-    }
-    
 //    public function getBountying()
 //    {
 //                    'bountying' => array(self::HAS_ONE, 'Bounty', 'questionid', 'condition' => 'status=' . Bounty::STATUS_OPEN . ' AND endtime>' . time()),

@@ -24,7 +24,6 @@ class AppAsset extends AssetBundle
         'css/main.css',
         'css/jquery.autocomplete.css',
         'css/prettify.css',
-        'css/site.css',
     ];
     public $js = [
         'js/prettify.js',

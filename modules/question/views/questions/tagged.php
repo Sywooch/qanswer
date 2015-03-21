@@ -13,33 +13,26 @@ $this->title = $this->context->title;
                 <h3><?php echo $tag->name; ?></h3>
                 <p><?php echo isset($tag->post) ? $tag->post->excerpt : ''; ?></p>
                 <p>
-                    <?php echo Html::a("关于", array('tags/view', 'tag' => $tag->name)); ?>
-                    <span class="lsep">|</span>
-                    <?php echo Html::a("用户", array('tags/view', 'tag' => $tag->name, 'op' => 'topusers'), array('title' => "顶级用户")); ?>
-                    <span class="lsep">|</span>
-                    <?php echo Html::a("新回答", array('tags/view', 'tag' => $tag->name, 'op' => 'topusers'), array('title' => '关于该标签的新回答')) ?>
+                    <?php echo Html::a("关于", ['tags/view', 'tag' => $tag->name]); ?>
+                    <?php echo Html::a("用户", ['tags/view', 'tag' => $tag->name, 'op' => 'topusers'], ['title' => "顶级用户"]); ?>
+                    <?php echo Html::a("新回答", ['tags/view', 'tag' => $tag->name, 'op' => 'topusers'], ['title' => '关于该标签的新回答']) ?>
                 </p>
             </div>
             <?php
-            foreach ($tagQuestions as $tq) {
-                echo $this->render('_question', array('data' => $tq->question));
+            foreach ($tagQuestions as $item) {
+                echo $this->render('_question', ['data' => $item->question]);
             }
             ?>
         </div>
-        <div class="cbt"></div>
         <?= yii\widgets\LinkPager::widget(['pagination' => $pages]);?>
     </div>
     <div id="sidebar" class="col-md-3">
         <div class="module">
             <div class="summarycount al"><?php echo $pages->totalCount; ?></div>
-            <?php if (isset($_GET['days'])): ?>
-                <p>该标签的问题（最近<strong><?php echo Html::encode($_GET['days']); ?></strong>天）</p>
-            <?php else: ?>
                 <p>该标签的问题 </p>
-                <?php endif; ?>
             <div class="tagged">
-                <?php echo Html::a($tag->name, array('questions/tagged', 'tag' => $tag->name), array('rel' => 'tag', 'class' => "post-tag")); ?>
-                <?php echo Html::a("关于 »", array('tags/view', 'tag' => $tag->name, 'op' => 'info'), array('rel' => 'tag', 'class' => "ml10", 'title' => '标签基本信息，统计，FAQ')); ?>
+                <?php echo Html::a($tag->name, ['questions/tagged', 'tag' => $tag->name], ['rel' => 'tag', 'class' => "post-tag"]); ?>
+                <?php echo Html::a("关于 »", ['tags/view', 'tag' => $tag->name, 'op' => 'info'], ['rel' => 'tag', 'class' => "ml10", 'title' => '标签基本信息，统计，FAQ']); ?>
             </div>
         </div>
         <?php echo $this->render('/common/_sidebar_tags'); ?>

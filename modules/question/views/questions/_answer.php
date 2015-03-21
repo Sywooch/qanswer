@@ -14,24 +14,23 @@ use app\components\Formatter;
             <a title="<?php echo Yii::t('global','vote down');?>" class="vote-down-off<?php if ($data->hasVote!=NULL && $data->hasVote==Vote::DOWNVOTE) echo " vote-down-on";?>"><?php echo Yii::t('global','vote down');?></a>
 
 
-            <?php if ($data->accepted == Post::ACCEPTED):?>
-                <?php if (!Yii::$app->user->isGuest && $question->isSelf()):?>
-                <a class="vote-accepted-off vote-accepted-on" id="vote-accepted-<?php echo $data->id;?>">取消为最佳答案</a>
-                <?php else:?>
-                <span class="vote-accepted-on" id="vote-accepted-<?php echo $data->id;?>">已采纳</span>
-                <?php endif;?>
-            <?php else:?>
-                <?php if (!Yii::$app->user->isGuest && $question->isSelf()):?>
-                <a class="vote-accepted-off" id="vote-accepted-<?php echo $data->id;?>">采纳为最佳答案</a>
-                <?php endif;?>
-            <?php endif;?>
+            <?php 
+            if ($data->isAccepted()) {
+                if ($question->isSelf()) 
+                    echo Html::a('取消为最佳答案', ['post/vote', 'postid'=>$data->id,'type'=> Vote::VOTE_TYPE_ACCEPTED], ['class' => "vote-accepted-off vote-accepted-on", 'id' => "vote-accepted-".$data->id]);
+                else
+                    echo Html::tag('span','已采纳', ['class' => 'vote-accepted-on', 'id' => 'vote-accepted-'.$data->id]);
+            } elseif ($question->isSelf()) {
+                echo Html::a('采纳为最佳答案', ['post/vote','postid'=>$data->id,'type'=> Vote::VOTE_TYPE_ACCEPTED], ['class' => "vote-accepted-off", 'id' => "vote-accepted-".$data->id]);
+            }
+            ?>
 
             <?php if (isset($question->closeBounty[$data->id]) && count($question->closeBounty[$data->id])>0):?>
-            <?php foreach($question->closeBounty[$data->id] as $bounty):?>
-            <div class="bounty-award-container">
-                <span title="该答案由<?php if ($bounty->status==Bounty::STATUS_SYS) echo "系统自动"; else echo $bounty->user->username;?>授予了<?php echo $bounty->bonus;?>威望的奖励" class="bounty-award">+<?php echo $bounty->bonus;?></span>
-            </div>
-            <?php endforeach;?>
+                <?php foreach($question->closeBounty[$data->id] as $bounty):?>
+                <div class="bounty-award-container">
+                    <span title="该答案由<?php if ($bounty->status==Bounty::STATUS_SYS) echo "系统自动"; else echo $bounty->user->username;?>授予了<?php echo $bounty->bonus;?>威望的奖励" class="bounty-award">+<?php echo $bounty->bonus;?></span>
+                </div>
+                <?php endforeach;?>
             <?php endif;?>
 
             <?php if (isset($question->openBounty) && $question->openBounty->isMine()):?>
@@ -52,7 +51,7 @@ use app\components\Formatter;
                 <div class="post-menu">
                     <?php
                     if (!Yii::$app->user->isGuest) {
-                        $this->render('_answer_menu',array('data'=>$data));
+                        echo $this->render('_answer_menu',array('data'=>$data));
                     }
                     ?>
                 </div>
@@ -79,19 +78,19 @@ use app\components\Formatter;
                         <div class="user-action-time">回答于
                              <span class="relativetime" title="<?php echo date("Y-m-d H:i:s",$data->createtime); ?>"><?php echo Formatter::ago($data->createtime);?></span>
                         </div>
-                        <?php $this->render('/common/_user',array('user'=>$data->author));?>
+                        <?= $this->render('/common/_user', ['user'=>$data->author]);?>
                         <?php if ($data->revCount>1):?>
                         <div class="user-details">
-                        <?php echo Html::a($data->revCount."个版本", array('post/revisions','id'=>$data->id),array('title'=>"查看历史版本"));?>
+                            <?php echo Html::a($data->revCount."个版本", ['post/revisions','id'=>$data->id], ['title'=>"查看历史版本"]);?>
                         </div>
                         <?php endif;?>
                     </div>
                     <?php else:?>
-                        <?php $this->render('/common/_user_wiki',array('data'=>$data));?>
+                        <?= $this->render('/common/_user_wiki', ['data'=>$data]);?>
                     <?php endif;?>
                 </div>
             </div>
         </div>
-        <?php $this->render('/post/_comments',array('data'=>$data));?>
+        <?= $this->render('/post/_comments', ['data'=>$data]);?>
     </div>
 </div>

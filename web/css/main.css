@@ -307,12 +307,10 @@ table {
 }
 .post-tag, .post-text .post-tag, #wmd-preview a.post-tag {
 	background-color:#E0EAF1;
-	border-bottom:1px solid #3E6D8E;
-	border-right:1px solid #7F9FB6;
 	color:#3E6D8E;
 	font-size:90%;
 	line-height:2.4;
-	margin:2px 2px 2px 0pt;
+	margin:2px;
 	padding:3px 4px;
 	text-decoration:none;
 	white-space:nowrap;
@@ -381,7 +379,7 @@ table {
 	vertical-align:top;
 }
 .user-info {
-	margin-bottom: 80px;
+	margin-bottom: 15px;
 }
 .user-info .user-action-time {
 	margin-bottom:4px;
@@ -1241,6 +1239,11 @@ a.comment-user {
 /*
  rivision
  */
+.owner-revision {
+    background-color: #E0EAF1;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
 .owner-revision td {
     background-color: #E0EAF1;
 }
@@ -1291,7 +1294,6 @@ a.comment-user {
 .revcell5 {
     margin-left: 15px;
     margin-top: 10px;
-    width: 800px;
 }
 .post-cell {
 	padding-left: 65px;
@@ -1511,12 +1513,11 @@ tr.comment-hover{
 	text-decoration: underline;
 }
 .welovelewen {
-	padding: 5px;
+	padding: 8px;
 	color: #333;
-	line-height: 130 % ;
-	overflow: hidden;
+	line-height: 1.3em;
 	margin-bottom: 8px;
-	border: 3px solid#eee;
+	border: 3px solid #eee;
 }
 .related {
     font-size: 90%;

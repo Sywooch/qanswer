@@ -25,4 +25,9 @@ class Answer extends Post
 //			['wiki','in','range'=>array(0,1)]
         ];
     }
+    
+    public function isAccepted()
+    {
+        return $this->accepted == self::ACCEPTED;
+    }
 }

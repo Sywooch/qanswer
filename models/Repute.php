@@ -122,13 +122,19 @@ class Repute extends ActiveRecord
             return false;
     }
 
+    /**
+     * 
+     * @param User $user
+     * @param type $score
+     */
     public function calReputation($user, $score = 0)
     {
         if ($score == 0)
             $score = $this->REPUTE_RULE[$this->type]['s'];
 
         $user->reputation = $user->reputation + $score;
-        $user->update(array('reputation'));
+        $user->setScenario('update');
+        $user->update(['reputation']);
     }
 
     // @todo 废弃

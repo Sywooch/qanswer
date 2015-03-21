@@ -3,7 +3,7 @@
 namespace app\components;
 
 use Yii;
-use app\models\QuestionTag;
+use app\modules\question\models\QuestionTag;
 
 class Top
 {

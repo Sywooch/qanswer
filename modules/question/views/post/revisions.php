@@ -14,22 +14,16 @@ use yii\helpers\Html;
 		?>
 		</h1>
 	</div>
-
-	<div id="revisions">
-		<table>
-			<tbody>
-				<?php
-				$total = count($revisions);
-				foreach($revisions as $num=>$revision){
-					echo $this->render('_revision',array(
-						'revision'=>$revision,
-						'num'	  =>$total - $num,
-					));
-				}
-				?>
-            </tbody>
-		</table>
-
+    <div id="revisions">
+        <?php
+        $total = count($revisions);
+        foreach ($revisions as $num => $revision) {
+            echo $this->render('_revision', [
+                'revision' => $revision,
+                'num'	   => $total - $num,
+            ]);
+        }
+        ?>
 	</div>
 </div>
 
@@ -44,11 +38,9 @@ use yii\helpers\Html;
 		} else {
 			var revDiv = $("#rev-" + id);
 			revDiv.show();
-//			master.addSpinner(revDiv);
-			$.get(uri, function (data) {
-		 		revDiv.html(data);
-//				master.removeSpinner();
-			});
+//			$.get(uri, function (data) {
+//		 		revDiv.html(data);
+//			});
 		}
 	}
 </script>

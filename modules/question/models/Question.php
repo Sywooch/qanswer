@@ -56,7 +56,7 @@ class Question extends Post
      */
     public $openBounty = null;
     public $toCloseBounty = null;
-    public $closeBounty = array();
+    public $closeBounty = [];
     public $bountyAmount = 0;
     public $hasFav;
 
@@ -122,27 +122,9 @@ class Question extends Post
     public function getAbsoluteUrl()
     {
         if ($this->isQuestion()) {
-            return Yii::$app->urlManager->createAbsoluteUrl(['/questionquestions/view', 'id' => $this->id]);
+            return Yii::$app->urlManager->createAbsoluteUrl(['/question/questions/view', 'id' => $this->id]);
         }
     }
-
-//    public function relations()
-//    {
-//        return array(
-//            'author' => array(self::BELONGS_TO, 'User', 'uid', 'condition' => 'author.status=' . User::STATUS_ACTIVE),
-//            'vote' => array(self::HAS_MANY, 'Vote', 'postid'),
-//            'poststate' => array(self::HAS_ONE, 'PostState', 'id'),
-//            'lastrevision' => array(self::BELONGS_TO, 'Revision', 'revisionid'),
-//            'comments' => array(self::HAS_MANY, 'Comment', 'idv', 'limit' => 3, 'condition' => 'comments.status=' . Comment::STATUS_OK),
-//            'question' => array(self::BELONGS_TO, 'post', 'idv', 'condition' => 'question.idtype="' . self::IDTYPE_Q . '"'),
-//            'tag' => array(self::HAS_ONE, 'Tag', 'postid', 'condition' => 'idtype="tag"'),
-//            'closeuids' => array(self::HAS_MANY, 'PostMod', 'postid', 'condition' => 'type=6'),
-//            'revCount' => array(self::STAT, 'Revision', 'postid', 'condition' => 'status=' . Revision::STATUS_OK),
-//            'bounties' => array(self::HAS_MANY, 'Bounty', 'questionid'),
-//            'bountying' => array(self::HAS_ONE, 'Bounty', 'questionid', 'condition' => 'status=' . Bounty::STATUS_OPEN . ' AND endtime>' . time()),
-//            'AScores' => array(self::STAT, 'Post', 'idv', 'condition' => 'idtype="' . self::IDTYPE_A . '"', 'select' => "sum(score)"),
-//        );
-//    }
 
     public function getBounties()
     {
@@ -272,7 +254,6 @@ class Question extends Post
         //3. 根据数量排序
         //4. 取10个结果
         $questions = array();
-        $ids = array();
 
         $cacheId = "question_relate_" . $this->id;
         $ids = Yii::$app->cache->get($cacheId);
@@ -448,4 +429,8 @@ class Question extends Post
         return $title;
     }
 
+    public function isAccepted()
+    {
+        return $this->accepted == self::ACCEPTED;
+    }
 }

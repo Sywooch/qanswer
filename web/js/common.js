@@ -1079,7 +1079,7 @@ var vote = function() {
                 formData[name] = optionalFormData[name]
             }
         }
-        alert(jClicked.attr('href'));
+//        alert(jClicked.attr('href'));
         $.ajax( {
             type : "POST",
             url : jClicked.attr('href'),
@@ -1384,8 +1384,10 @@ var vote = function() {
             }
             getAccepted().click(function() {
                 submitAccepted($(this));
+                return false;
             })
-        })
+        });
+        return false;
     };
 
     return {
@@ -1455,6 +1457,7 @@ var vote = function() {
             bindDeleteClicks();
             getAccepted().unbind("click").click(function() {
                 submitAccepted($(this));
+                return false;
             });
 
             getUnprotectClick().unbind("click").click(function() {

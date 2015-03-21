@@ -1,10 +1,10 @@
 <div class="user-gravatar32">
-    <a href="<?php echo yii\helpers\Url::to('users/view',array('id'=>$user->id));?>">
+    <a href="<?php echo yii\helpers\Url::to($user->getUrl());?>">
 		<img width="32" height="32" class="logo" alt="" src="<?php echo $user->smallavatar;?>">
 	</a>
 </div>
 <div class="user-details">
-	<?php echo \yii\helpers\Html::a($user->username, array('users/view','id'=>$user->id),array('title'=>$user->username));?>
+	<?php echo \yii\helpers\Html::a($user->username, $user->getUrl(), ['title'=>$user->username]);?>
 	<br />
 	<span title="威望" class="reputation-score"><?php echo $user->reputation;?></span>
 	<?php

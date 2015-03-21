@@ -137,16 +137,16 @@ class QuestionsController extends BaseController
     {
         $submenu = [
             'items' => [
-                array('label' => '最新', 'url' => array('questions/index', 'sort' => 'newest'), 'options' => array('title' => '按时间排序')),
-                array('label' => '悬赏', 'url' => array('questions/index', 'sort' => 'bounty'), 'options' => array('title' => '按悬赏排序')),
-                array('label' => '投票', 'url' => array('questions/index', 'sort' => 'votes'), 'options' => array('title' => '按投票排序')),
-                array('label' => '活跃', 'url' => array('questions/index', 'sort' => 'active'), 'options' => array('title' => '按活跃度排序')),
-                array('label' => '未解决', 'url' => array('questions/index', 'sort' => 'unanswered'), 'options' => array('title' => '没有有用投票')),
+                ['label' => '最新', 'url' => ['questions/index', 'sort' => 'newest'], 'options' => ['title' => '按时间排序']],
+                ['label' => '悬赏', 'url' => ['questions/index', 'sort' => 'bounty'], 'options' => ['title' => '按悬赏排序']],
+                ['label' => '投票', 'url' => ['questions/index', 'sort' => 'votes'], 'options' => ['title' => '按投票排序']],
+                ['label' => '活跃', 'url' => ['questions/index', 'sort' => 'active'], 'options' => ['title' => '按活跃度排序']],
+                ['label' => '未解决', 'url' => ['questions/index', 'sort' => 'unanswered'], 'options' => ['title' => '没有有用投票']],
             ],
             'options' => ['id' => 'tabs', 'class' => 'nav nav-tabs']
         ];
 
-        $query = Post::find()->where('idtype=:idtype', [':idtype' => Post::IDTYPE_Q]);
+        $query = Question::find()->where('idtype=:idtype', [':idtype' => Post::IDTYPE_Q]);
         $sort = Yii::$app->request->get('sort', 'newest');
         switch ($sort) {
             case 'votes':
@@ -197,17 +197,17 @@ class QuestionsController extends BaseController
         $days = Yii::$app->request->get('days', 0);
         $tag = Tag::findOne(['name' => Yii::$app->request->get('tag')]);
 
-        $url = array('questions/tagged', 'tag' => Yii::$app->request->get('tag'));
-        $submenu = array(
-            'items' => array(
-                array('label' => '最新', 'url' => array_merge($url, array('sort' => 'newest')), 'options' => array('title' => '按时间排序')),
-                array('label' => '悬赏', 'url' => array_merge($url, array('sort' => 'bounty')), 'options' => array('title' => '按悬赏排序')),
-                array('label' => '投票', 'url' => array_merge($url, array('sort' => 'votes')), 'options' => array('title' => '按投票排序')),
-                array('label' => '活跃', 'url' => array_merge($url, array('sort' => 'active')), 'options' => array('title' => '按活跃度排序')),
-                array('label' => '未解决', 'url' => array_merge($url, array('sort' => 'unanswered')), 'options' => array('title' => '没有有用投票')),
-            ),
+        $url = ['questions/tagged', 'tag' => Yii::$app->request->get('tag')];
+        $submenu = [
+            'items' => [
+                ['label' => '最新', 'url' => array_merge($url, ['sort' => 'newest']), 'options' => ['title' => '按时间排序']],
+                ['label' => '悬赏', 'url' => array_merge($url, ['sort' => 'bounty']), 'options' => ['title' => '按悬赏排序']],
+                ['label' => '投票', 'url' => array_merge($url, ['sort' => 'votes']), 'options' => ['title' => '按投票排序']],
+                ['label' => '活跃', 'url' => array_merge($url, ['sort' => 'active']), 'options' => ['title' => '按活跃度排序']],
+                ['label' => '未解决', 'url' => array_merge($url, ['sort' => 'unanswered']), 'options' => ['title' => '没有有用投票']],
+            ],
             'options' => ['id' => 'tabs', 'class' => 'nav nav-tabs']
-        );
+        ];
 
         $questionTagQuery = QuestionTag::find()->where(['tag' => $tag->name]);
 
@@ -291,7 +291,6 @@ class QuestionsController extends BaseController
     {
         if ($this->model === null) {
             if (Yii::$app->request->get('id')) {
-
                 $query = Question::find();
                 if (!Yii::$app->user->isGuest) {
                     $query->select(['post.*', 'vote.useful as hasVote', 'vote.fav as hasFav']);
@@ -302,16 +301,16 @@ class QuestionsController extends BaseController
             if ($this->model === null || !$this->model->isQuestion())
                 throw new \yii\web\NotFoundHttpException(404, '请求页面不存在.');
             
-            if (!empty($this->model->bounties)) {
-                foreach ($this->model->bounties as $bounty) {
-                    if ($bounty->isOpen()) {
-                        $this->model->openBounty = $bounty;
-                        $this->hasOpenBounty = true;
-                    } else {
-                        $this->model->closeBounty[$bounty->answerid][] = $bounty;
-                    }
-                }
-            }
+//            if (!empty($this->model->bounties)) {
+//                foreach ($this->model->bounties as $bounty) {
+//                    if ($bounty->isOpen()) {
+//                        $this->model->openBounty = $bounty;
+//                        $this->hasOpenBounty = true;
+//                    } else {
+//                        $this->model->closeBounty[$bounty->answerid][] = $bounty;
+//                    }
+//                }
+//            }
         }
         return $this->model;
     }

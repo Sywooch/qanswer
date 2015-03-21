@@ -14,7 +14,7 @@ use app\components\Formatter;
                 </div>
             </div>
 	        <?php
-			if ($data->accepted== Post::ACCEPTED) {
+			if ($data->isAccepted()) {
         		$answerClass = "answered-accepted";
         	} elseif ($data->answercount==0) {
 	        	$answerClass = "unanswered";
@@ -28,13 +28,12 @@ use app\components\Formatter;
         </div>
         <div title="<?php echo $data->viewcount;?>次" class="views">阅读 <?php echo app\components\Formatter::view($data->viewcount);?></div>
     </div>
+   
     <div class="summary">
     	<?php if ($data->bountyAmount>0):?>
-    	<div title="该问题有悬赏<?php echo $data->bountyAmount;?>威望" class="bounty-indicator">+<?php echo $data->bountyAmount;?></div>
+            <div title="该问题有悬赏<?= $data->bountyAmount;?>威望" class="bounty-indicator">+<?= $data->bountyAmount;?></div>
     	<?php endif;?>
-    	<h3>
-    		<?php echo Html::a(Html::encode($data->title), $data->url,array('class'=>'question-hypera'));?>
-    	</h3>
+    	<h3><?= Html::a(Html::encode($data->title), $data->url, ['class'=>'question-hypera']);?></h3>
         <div class="excerpt">
 			<?php echo $data->excerpt;?>
         </div>
@@ -42,16 +41,16 @@ use app\components\Formatter;
         <div class="tags<?php foreach(explode(' ',$data->replaceTags($data->tags)) as $tag) echo ' t-'.$tag;?>">
 			<?php
             foreach (explode(' ',$data->tags) as $tag) {
-            	echo Html::a($tag, array('questions/tagged','tag'=>$tag),array('class'=>'post-tag','rel'=>'tag','title'=>"显示标签 '$tag'"));
+            	echo Html::a($tag, ['questions/tagged','tag'=>$tag], ['class'=>'post-tag','rel'=>'tag','title'=>"显示标签 '$tag'"]);
             }
             ?>
         </div>
         <div class="started">
             <div class="user-info">
             	<div class="user-action-time">提问
-            		<span class="relativetime" title="<?php echo Formatter::time($data->createtime);?>"><?php echo Formatter::ago($data->createtime);?></span>
+            		<span class="relativetime" title="<?= Formatter::time($data->createtime);?>"><?= Formatter::ago($data->createtime);?></span>
             	</div>
-				<?php $this->render('/common/_user',array('user'=>$data->author));?>
+				<?= $this->render('/common/_user', ['user'=>$data->author]);?>
 			</div>
         </div>
     </div>
