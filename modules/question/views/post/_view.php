@@ -1,6 +1,5 @@
 <div id="question-summary-<?php echo $data->id; ?>" class="question-summary">
     <div class="statscontainer">
-        <div class="statsarrow"/>
         <div class="stats">
             <div class="vote">
                 <div class="votes">

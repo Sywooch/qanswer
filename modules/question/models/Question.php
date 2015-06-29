@@ -131,12 +131,6 @@ class Question extends Post
         return $this->hasMany(Bounty::className(), ['questionid' => 'id']);
     }
     
-//    public function getBountying()
-//    {
-//                    'bountying' => array(self::HAS_ONE, 'Bounty', 'questionid', 'condition' => 'status=' . Bounty::STATUS_OPEN . ' AND endtime>' . time()),
-//
-//    }
-
     public function attributeLabels()
     {
         return array(
@@ -196,7 +190,6 @@ class Question extends Post
             $uid = Yii::$app->user->getId();
         if ($this->hasExistAnswer === null) {
             return $this->hasExistAnswer = self::find()->where("idv=:questionid AND idtype=:idtype AND uid=:uid", [':uid' => $uid, ':questionid' => $this->id, ':idtype' => self::IDTYPE_A])->exists();
-//			return $this->hasExistAnswer = $this->exists("idv=:questionid AND idtype=:idtype AND uid=:uid",array(':uid'=>$uid,':questionid'=>$this->id,':idtype'=>self::IDTYPE_A));
         } else {
             return $this->hasExistAnswer;
         }
@@ -284,7 +277,7 @@ class Question extends Post
         }
 
         if (is_array($ids) && count($ids) > 0) {
-            $questions = Post::find()->where(['id' => $ids])->all();
+            $questions = self::find()->where(['id' => $ids])->all();
         }
         return $questions;
     }
